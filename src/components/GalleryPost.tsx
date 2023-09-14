@@ -1,17 +1,19 @@
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import styled from 'styled-components/native';
+import { Dimensions } from 'react-native';
+
+const SLIDER_WIDTH = Dimensions.get('window').width;
+const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 1);
+const ITEM_HEIGHT = Math.round(ITEM_WIDTH * 3 / 4);
 
 const Container = styled.View`
   flex: 1;
+  background-color: #fff;
 `;
 
 const CarouselContainer = styled.View`
   flex: 1;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
 `;
 
 const Image = styled.Image`
@@ -19,17 +21,39 @@ const Image = styled.Image`
   height: 300px; /* Altura de las imágenes en el carrusel */
 `;
 
-const SLIDER_WIDTH = Dimensions.get('window').width;
-const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 1);
-const ITEM_HEIGHT = Math.round(ITEM_WIDTH * 3 / 4);
+const PaginationContainer = styled.View`
+  flex-direction: row;
+  justifyContent: center;
+  alignItems: center;
+  position: absolute;
+  bottom: 25px;
+  left: 0;
+  right: 0;
+`;
 
-const ImageCarousel = ({ images }) => {
+const PageNumber = styled.Text`
+  color: black; /* Color de los puntos de paginación activos */
+  font-size: 24px; /* Tamaño del punto de paginación */
+  margin: 0 5px; /* Espaciado entre los puntos de paginación */
+`;
+
+function ImageCarousel({ images }) {
   const [activeSlide, setActiveSlide] = React.useState(0);
 
   const renderCarouselItem = ({ item }) => {
     return (
       <CarouselContainer>
         <Image source={{ uri: item }} />
+        <PaginationContainer>
+          {images.map((_, index) => (
+            <PageNumber
+              key={index}
+              style={{ opacity: index === activeSlide ? 1 : 0.5 }}
+            >
+              &bull;
+            </PageNumber>
+          ))}
+        </PaginationContainer>
       </CarouselContainer>
     );
   };
@@ -43,27 +67,8 @@ const ImageCarousel = ({ images }) => {
         itemWidth={ITEM_WIDTH}
         onSnapToItem={(index) => setActiveSlide(index)}
       />
-      <Pagination
-        dotsLength={images.length}
-        activeDotIndex={activeSlide}
-        containerStyle={{ paddingTop: 10 }}
-        dotStyle={{
-          width: 10,
-          height: 10,
-          borderRadius: 5,
-          marginHorizontal: 8,
-          backgroundColor: 'rgba(0, 0, 0, 0.92)',
-        }}
-        inactiveDotStyle={{
-          width: 8,
-          height: 8,
-          borderRadius: 4,
-          marginHorizontal: 8,
-          backgroundColor: 'rgba(0, 0, 0, 0.2)',
-        }}
-      />
     </Container>
   );
-};
+}
 
 export default ImageCarousel;

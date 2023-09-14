@@ -8,16 +8,15 @@ import ActionsButtons from '../components/ActionsButtons';
 const Container = styled.ScrollView`
 	flex: 1;
 	align-center: center;
-  paddingLeft: 15px;
-  paddingRight: 15px;
+  paddingLeft: 0px;
+  paddingRight: 0px;
   background: white;
 `;
 
 const Post = styled.View`
   flex: 1;
-  height: 450px;
-  marginTop: 15px;
-  marginBottom: 5px;
+  height: 420px;
+  marginBottom: 25px;
 `;
 
 const HeaderPostContainer = styled.View`
@@ -47,10 +46,11 @@ const GalleryContainer = styled.View`
   width: 100%;
 `;
 
-const Title = styled.Text`
+const PostTitle = styled.Text`
   fontSize: 25px;
   fontWeight: 900;
   color: black;
+  marginLeft: 10px;
 `;
 
 const images = [
@@ -69,7 +69,7 @@ function Dashboard () {
           .map((item, index) => (
             <Post key={index}>
               <HeaderPostContainer>
-                <Avatar imageSource={{uri: 'https://images.rawpixel.com/image_png_1000/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA0L3BmLWljb240LWppcjIwNjItcG9yLWwtam9iNzg4LnBuZw.png'}} />
+                <Avatar imageSource={{uri: 'https://yt3.googleusercontent.com/ytc/AOPolaTqtKeqkDGtMCiXSyCnLcYRMGggZIz9L-Gpt5i4CA=s900-c-k-c0x00ffffff-no-rj'}} />
                 <UserContainer>
                   <UserNameText>@heykenny</UserNameText>
                   <PlaceText>Guatemala City</PlaceText>
@@ -78,7 +78,7 @@ function Dashboard () {
               <GalleryContainer>
                 <ImageCarousel images={images} />
               </GalleryContainer>
-              <Title>Mi Guate es increíble</Title>
+              <PostTitle>Mi Guate es increíble</PostTitle>
               <ActionsButtons />
             </Post>
           ))

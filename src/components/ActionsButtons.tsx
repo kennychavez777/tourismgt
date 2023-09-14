@@ -10,6 +10,7 @@ const ActionButtonsContainer = styled.View`
   width: 100%;
   height: 25px;
   flex-direction: row;
+  marginLeft: 10px;
 `;
 
 const ActionItemContainer = styled.Text`
