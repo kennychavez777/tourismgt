@@ -1,4 +1,5 @@
 import "react-native-gesture-handler";
+import './src/utils/warnings';
 import React from 'react';
 
 //import SignUpScreen from './src/screens/SignUpScreen';
