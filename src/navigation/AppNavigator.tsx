@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 // Icons
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faHome, faMagnifyingGlass, faPlus, faCalendarDays, faGears } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faMagnifyingGlass, faPlus, faCalendarDays, faUser } from '@fortawesome/free-solid-svg-icons';
 
 // Screens
 import LoginScreen from '../screens/LoginScreen';
@@ -13,9 +13,10 @@ import SignUpScreen from '../screens/SignUpScreen';
 import Dashboard from '../screens/Dashboard';
 import SearchScreen from '../screens/SearchScreen';
 import CreatePostScreen from '../screens/CreatePost';
-import ScheduleScreen from '../screens/Schedule';
-import ProfileScreen from '../screens/Profile';
+import ScheduleScreen from '../screens/ScheduleScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 import PostDetailScreen from '../screens/PostDetail';
+import EditProfileScreen from '../screens/EditProfileScreen';
 
 // Stack
 const Stack = createNativeStackNavigator();
@@ -35,6 +36,7 @@ function StackGroup() {
  				<Stack.Screen name="Schedule" component={ScheduleScreen} />
  				<Stack.Screen name="Profile" component={ProfileScreen} />
  				<Stack.Screen name="PostDetail" component={PostDetailScreen} />
+				<Stack.Screen name="Edit Profile" component={EditProfileScreen} />
 		</Stack.Navigator>
 	)
 }
@@ -58,7 +60,7 @@ function BottomTabGroup() {
 					} else if ( route.name === 'Schedule') {
 						myIcon = faCalendarDays;
 					}else if ( route.name === 'Profile') {
-						myIcon = faGears;
+						myIcon = faUser;
 					}
 
 					return <FontAwesomeIcon icon={myIcon} color={color} size={size} />;
@@ -69,7 +71,7 @@ function BottomTabGroup() {
 				name="Dashboard" component={Dashboard} 
 			/>
 			<Tab.Screen
-				name="Search" component={SearchScreen}
+				name="Edit Profile" component={EditProfileScreen}
 			/>
 			<Tab.Screen 
 				name="CreatePost" component={CreatePostScreen} 
