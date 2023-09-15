@@ -12,7 +12,7 @@ import LoginScreen from '../screens/LoginScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import Dashboard from '../screens/Dashboard';
 import SearchScreen from '../screens/SearchScreen';
-import CreatePostScreen from '../screens/CreatePost';
+import CreatePostScreen from '../screens/CreatePostScreen';
 import ScheduleScreen from '../screens/ScheduleScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import PostDetailScreen from '../screens/PostDetail';
