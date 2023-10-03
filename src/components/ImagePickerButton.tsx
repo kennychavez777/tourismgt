@@ -3,6 +3,10 @@ import { View, Button, FlatList, Image } from 'react-native';
 import styled from 'styled-components/native';
 import * as ImagePicker from 'react-native-image-picker';
 
+// Icon
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faPaperclip } from '@fortawesome/free-solid-svg-icons';
+
 const Container = styled.View`
   flex: 1;
   justify-content: center;
@@ -11,10 +15,12 @@ const Container = styled.View`
 `;
 
 const UploadButton = styled.TouchableOpacity`
-  background-color: #007bff;
+  background-color: #fff;
   padding: 15px 30px;
   border-radius: 5px;
   margin-bottom: 20px;
+  borderWidth: 1px;
+  borderColor: grey;
 `;
 
 const ButtonText = styled.Text`
@@ -60,7 +66,9 @@ function ImagePickerButton() {
   return (
     <Container>
       <UploadButton onPress={handleImagePicker}>
-        <ButtonText>Seleccionar Fotos</ButtonText>
+        <ButtonText>
+          <FontAwesomeIcon icon={faPaperclip} color='grey'></FontAwesomeIcon>
+        </ButtonText>
       </UploadButton>
       <SelectedImagesContainer>
         <FlatList

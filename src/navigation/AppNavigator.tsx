@@ -17,26 +17,38 @@ import ScheduleScreen from '../screens/ScheduleScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import PostDetailScreen from '../screens/PostDetail';
 import EditProfileScreen from '../screens/EditProfileScreen';
+import CreateEventsScreen from '../screens/CreateEventScreen';
 
 // Stack
 const Stack = createNativeStackNavigator();
 
 function StackGroup() {
 	return (
-		<Stack.Navigator>
-				<Stack.Screen
-					name="DashboardMain"
-					component={ Dashboard }
-					options={{ headerShown: false }}
-				/>
- 				<Stack.Screen name="Login" component={LoginScreen} />
- 				<Stack.Screen name="SignUp" component={SignUpScreen} />
- 				<Stack.Screen name="Search" component={SearchScreen} />
- 				<Stack.Screen name="CreatePost" component={CreatePostScreen} />
- 				<Stack.Screen name="Schedule" component={ScheduleScreen} />
- 				<Stack.Screen name="Profile" component={ProfileScreen} />
- 				<Stack.Screen name="PostDetail" component={PostDetailScreen} />
-				<Stack.Screen name="Edit Profile" component={EditProfileScreen} />
+		<Stack.Navigator
+			screenOptions={{
+				// headerShown: false
+			}}
+		>
+			<Stack.Screen
+				name="DashboardMain"
+				component={ Dashboard }
+				options={{ headerShown: false }}
+			/>
+			<Stack.Screen name="Login" component={LoginScreen} />
+			<Stack.Screen name="SignUp" component={SignUpScreen} />
+			<Stack.Screen
+				name="Search"
+				component={SearchScreen}
+				options={{
+					headerShown: false,
+				}}
+			/>
+			<Stack.Screen name="CreatePost" component={CreatePostScreen} />
+			<Stack.Screen name="Schedule" component={ScheduleScreen} />
+			<Stack.Screen name="Profile" component={ProfileScreen} />
+			<Stack.Screen name="PostDetail" component={PostDetailScreen} />
+			<Stack.Screen name="Edit Profile" component={EditProfileScreen} />
+			<Stack.Screen name="CreateEvent" component={CreateEventsScreen} />
 		</Stack.Navigator>
 	)
 }
@@ -71,7 +83,7 @@ function BottomTabGroup() {
 				name="Dashboard" component={Dashboard} 
 			/>
 			<Tab.Screen
-				name="Edit Profile" component={EditProfileScreen}
+				name="Search" component={SearchScreen}
 			/>
 			<Tab.Screen 
 				name="CreatePost" component={CreatePostScreen} 

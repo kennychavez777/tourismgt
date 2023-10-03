@@ -65,7 +65,7 @@ function ProfileScreen () {
           Array(10)
             .fill(true)
             .map((item, index) => (
-              <PostContainer>
+              <PostContainer key={index}>
                 <ImagePost source={{ uri: 'https://img.freepik.com/foto-gratis/hermoso-camino-madera-que-impresionantes-arboles-coloridos-bosque_181624-5840.jpg?w=1380&t=st=1694710282~exp=1694710882~hmac=bfde8b97a543726166c6789a9300601781a0db35a4621bfca62b7c885be70358' }}></ImagePost>
                 <TitlePost>Increíble mi Guate</TitlePost>
                 <PlaceTitlePost>Antigua Guatemala</PlaceTitlePost>
