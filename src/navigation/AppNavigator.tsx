@@ -80,7 +80,7 @@ function BottomTabGroup() {
 			})}
 		>
 			<Tab.Screen
-				name="Dashboard" component={Dashboard} 
+				name="Dashboard" component={PostDetailScreen} 
 			/>
 			<Tab.Screen
 				name="Search" component={SearchScreen}

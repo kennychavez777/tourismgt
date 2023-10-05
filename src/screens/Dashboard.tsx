@@ -13,7 +13,7 @@ const Container = styled.ScrollView`
   background: white;
 `;
 
-const Post = styled.View`
+const Post = styled.TouchableOpacity`
   flex: 1;
   height: 420px;
   marginBottom: 25px;
@@ -60,6 +60,10 @@ const images = [
   // Agrega más URL de imágenes según sea necesario
 ];
 
+const goToPost = (id: number) => {
+  console.log('id', id)
+}
+
 function Dashboard () {
   return (
     <Container>
@@ -67,7 +71,7 @@ function Dashboard () {
         Array(6)
           .fill(true)
           .map((item, index) => (
-            <Post key={index}>
+            <Post key={index} onPress={goToPost(index)}>
               <HeaderPostContainer>
                 <Avatar imageSource={{uri: 'https://yt3.googleusercontent.com/ytc/AOPolaTqtKeqkDGtMCiXSyCnLcYRMGggZIz9L-Gpt5i4CA=s900-c-k-c0x00ffffff-no-rj'}} />
                 <UserContainer>

@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Text } from 'react-native';
 
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faHeart, faComment } from '@fortawesome/free-regular-svg-icons';
