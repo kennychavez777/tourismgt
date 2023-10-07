@@ -1,8 +1,8 @@
 import React from 'react';
-import { Text } from 'react-native';
 import styled from 'styled-components';
 import ImageCarousel from '../components/GalleryPost';
 import PostedBy from '../components/PostedBy';
+import Comments from '../components/Comments';
 
 const Container = styled.ScrollView`
   flex: 1;
@@ -22,6 +22,8 @@ const DetailContainer = styled.View`
   width: 90%;
   flex-direction: column;
   alignSelf: center;
+  borderBottomWidth: 2px;
+  borderColor: lightgrey;
 `;
 
 const PostTitle = styled.Text`
@@ -61,6 +63,7 @@ function PostDetailScreen () {
         </PostDescription>
         <PostedBy />
       </DetailContainer>
+      <Comments />
     </Container>
   );
 }

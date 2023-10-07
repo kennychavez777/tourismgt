@@ -19,6 +19,9 @@ import PostDetailScreen from '../screens/PostDetail';
 import EditProfileScreen from '../screens/EditProfileScreen';
 import CreateEventsScreen from '../screens/CreateEventScreen';
 
+/// Agenda testing
+import AgendaScreen from '../screens/AgendaScreen';
+
 // Stack
 const Stack = createNativeStackNavigator();
 
@@ -44,7 +47,7 @@ function StackGroup() {
 				}}
 			/>
 			<Stack.Screen name="CreatePost" component={CreatePostScreen} />
-			<Stack.Screen name="Schedule" component={ScheduleScreen} />
+			<Stack.Screen name="Schedule" component={AgendaScreen} />
 			<Stack.Screen name="Profile" component={ProfileScreen} />
 			<Stack.Screen name="PostDetail" component={PostDetailScreen} />
 			<Stack.Screen name="Edit Profile" component={EditProfileScreen} />
@@ -89,7 +92,7 @@ function BottomTabGroup() {
 				name="CreatePost" component={CreatePostScreen} 
 			/>
 			<Tab.Screen 
-				name="Schedule" component={ScheduleScreen} 
+				name="Schedule" component={AgendaScreen} 
 			/>
 			<Tab.Screen 
 				name="Profile" component={ProfileScreen}
