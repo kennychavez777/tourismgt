@@ -21,6 +21,7 @@ import CreateEventsScreen from '../screens/CreateEventScreen';
 
 /// Agenda testing
 import AgendaScreen from '../screens/AgendaScreen';
+import AddFriendsModal from '../screens/AddFriendsModal';
 
 // Stack
 const Stack = createNativeStackNavigator();
@@ -32,26 +33,31 @@ function StackGroup() {
 				// headerShown: false
 			}}
 		>
-			<Stack.Screen
-				name="DashboardMain"
-				component={ Dashboard }
-				options={{ headerShown: false }}
-			/>
-			<Stack.Screen name="Login" component={LoginScreen} />
-			<Stack.Screen name="SignUp" component={SignUpScreen} />
-			<Stack.Screen
-				name="Search"
-				component={SearchScreen}
-				options={{
-					headerShown: false,
-				}}
-			/>
-			<Stack.Screen name="CreatePost" component={CreatePostScreen} />
-			<Stack.Screen name="Schedule" component={AgendaScreen} />
-			<Stack.Screen name="Profile" component={ProfileScreen} />
-			<Stack.Screen name="PostDetail" component={PostDetailScreen} />
-			<Stack.Screen name="Edit Profile" component={EditProfileScreen} />
-			<Stack.Screen name="CreateEvent" component={CreateEventsScreen} />
+			<Stack.Group>
+				<Stack.Screen
+					name="DashboardMain"
+					component={ Dashboard }
+					options={{ headerShown: false }}
+				/>
+				<Stack.Screen name="Login" component={LoginScreen} />
+				<Stack.Screen name="SignUp" component={SignUpScreen} />
+				<Stack.Screen
+					name="Search"
+					component={SearchScreen}
+					options={{
+						headerShown: false,
+					}}
+				/>
+				<Stack.Screen name="CreatePost" component={CreatePostScreen} />
+				<Stack.Screen name="Schedule" component={AgendaScreen} />
+				<Stack.Screen name="Profile" component={ProfileScreen} />
+				<Stack.Screen name="PostDetail" component={PostDetailScreen} />
+				<Stack.Screen name="Edit Profile" component={EditProfileScreen} />
+				<Stack.Screen name="CreateEvent" component={CreateEventsScreen} />
+			</Stack.Group>
+			<Stack.Group screenOptions={{ presentation: 'modal' }}>
+				<Stack.Screen name="AddFriendsModal" component={AddFriendsModal} />
+			</Stack.Group>
 		</Stack.Navigator>
 	)
 }
@@ -83,7 +89,7 @@ function BottomTabGroup() {
 			})}
 		>
 			<Tab.Screen
-				name="Dashboard" component={PostDetailScreen} 
+				name="Dashboard" component={StackGroup} options={{headerShown: false}}
 			/>
 			<Tab.Screen
 				name="Search" component={SearchScreen}
@@ -100,6 +106,8 @@ function BottomTabGroup() {
 		</Tab.Navigator>
 	);
 }
+
+const RootStack = createNativeStackNavigator();
 
 export default function AppNavigator () {
 	return (

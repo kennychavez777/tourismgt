@@ -1,156 +1,112 @@
-import React, {Component} from 'react';
-import {Alert, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
-import {Agenda, DateData, AgendaEntry, AgendaSchedule} from '@bas-software/react-native-calendars';
+import React, { useState, useEffect } from 'react';
+import { Alert, Text, View, TouchableOpacity, StyleSheet } from 'react-native';
+import { Agenda, DateData } from '@bas-software/react-native-calendars';
 import testIDs from '../utils/testIDs';
+import { useNavigation } from '@react-navigation/native';
 
-interface State {
-  items?: AgendaSchedule;
-}
+// Icons
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faCalendarPlus } from '@fortawesome/free-solid-svg-icons';
 
-export default class AgendaScreen extends Component<State> {
-  state: State = {
-    items: undefined
-  };
+const AgendaScreen = () => {
+  const [items, setItems] = useState({});
+  const navigation = useNavigation();
+  const current = new Date();
 
-  // reservationsKeyExtractor = (item, index) => {
-  //   return `${item?.reservation?.day}${index}`;
-  // };
-
-  render() {
-    const current = new Date();
-
-    return (
-      <Agenda
-        testID={testIDs.agenda.CONTAINER}
-        items={this.state.items}
-        loadItemsForMonth={this.loadItems}
-        selected={current.toISOString()}
-        renderItem={this.renderItem}
-        renderEmptyDate={this.renderEmptyDate}
-        rowHasChanged={this.rowHasChanged}
-        showClosingKnob={true}
-        // markingType={'period'}
-        // markedDates={{
-        //    '2017-05-08': {textColor: '#43515c'},
-        //    '2017-05-09': {textColor: '#43515c'},
-        //    '2017-05-14': {startingDay: true, endingDay: true, color: 'blue'},
-        //    '2017-05-21': {startingDay: true, color: 'blue'},
-        //    '2017-05-22': {endingDay: true, color: 'gray'},
-        //    '2017-05-24': {startingDay: true, color: 'gray'},
-        //    '2017-05-25': {color: 'gray'},
-        //    '2017-05-26': {endingDay: true, color: 'gray'}}}
-        // monthFormat={'yyyy'}
-        // theme={{calendarBackground: 'red', agendaKnobColor: 'green'}}
-        // renderDay={this.renderDay}
-        // hideExtraDays={false}
-        // showOnlySelectedDayItems
-        // reservationsKeyExtractor={this.reservationsKeyExtractor}
-      />
-    );
-  }
-
-  loadItems = (day: DateData) => {
-    const items = this.state.items || {};
-
-    const events = {
-      '2023-10-06': [
-        { name: `Comer alitas`, height: '150', day: '2023-10-06' }
-      ],
-      '2023-10-07': [
-        { name: `Manifestación en la z1`, height: '100', day: '2023-10-07' }
-      ],
-    }
+  const loadItems = (day: DateData) => {
+    const newItems = { ...items };
 
     setTimeout(() => {
-      for (let i = 0; i < 1; i++) {
+      for (let i = 0; i < 10; i++) {
+        //const time = new Date(day).getTime() + i * 24 * 60 * 60 * 1000;
         const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-        const strTime = this.timeToString(time);
+        const strTime = timeToString(time);
 
-        if (!items[strTime]) {
-          items[strTime] = [];
-          
+        if (!newItems[strTime]) {
+          newItems[strTime] = [];
+
           const numItems = Math.floor(Math.random() * 3 + 0);
           for (let j = 0; j < numItems; j++) {
-            items[strTime].push({
+            newItems[strTime].push({
               name: `Hey`,
               height: Math.max(50, Math.floor(Math.random() * 150)),
-              day: strTime
+              day: strTime,
             });
           }
         }
       }
-      
-      console.log('events: ', items, events)
-      const newItems: AgendaSchedule = {};
-      Object.keys(items).forEach(key => {
-        newItems[key] = items[key];
+
+      const newItemsData = {};
+      Object.keys(newItems).forEach((key) => {
+        newItemsData[key] = newItems[key];
       });
-      this.setState({
-        items: newItems
-      });
+      setItems(newItemsData);
     }, 1000);
   };
 
-  renderDay = (day) => {
-    if (day) {
-      return <Text style={styles.customDay}>{day.getDay()}</Text>;
-    }
-    return <View style={styles.dayItem}/>;
+  const timeToString = (time: number) => {
+    const date = new Date(time);
+    return date.toISOString().split('T')[0];
   };
 
-  renderItem = (reservation: AgendaEntry, isFirst: boolean) => {
+  const renderItem = ({ item, index }) => {
+    const isFirst = index === 0;
     const fontSize = isFirst ? 16 : 14;
     const color = isFirst ? 'black' : '#43515c';
+    // Descomenta la línea siguiente si necesitas navegar a otra pantalla
+    // const navigation = useNavigation();
 
     return (
       <TouchableOpacity
         testID={testIDs.agenda.ITEM}
-        style={[styles.item, {height: reservation.height}]}
-        onPress={() => Alert.alert(reservation.name)}
+        style={[styles.item, { height: item ? item.height : 0 }]}
+        onPress={() => Alert.alert("hey!")}
+        // onPress={() => navigation.navigate('CreateEvent')}
       >
-        <Text style={{fontSize, color}}>{reservation.name}</Text>
+        <Text style={{ fontSize, color }}>{"Heey"}</Text>
       </TouchableOpacity>
     );
   };
 
-  renderEmptyDate = () => {
+  const renderEmptyDate = () => {
     return (
-      <View style={styles.emptyDate}>
-        <Text>This is empty date!</Text>
-      </View>
+      <TouchableOpacity
+        style={styles.item}
+        onPress={() => navigation.navigate('CreateEvent') }
+      >
+        <Text style={{ textAlign: 'center' }}>
+          <FontAwesomeIcon icon={faCalendarPlus} size={30} color='grey' />
+          {"\n"}
+          Presiona para agregar un evento.
+        </Text>
+      </TouchableOpacity>
     );
   };
 
-  rowHasChanged = (r1: AgendaEntry, r2: AgendaEntry) => {
-    return r1.name !== r2.name;
-  };
-
-  timeToString(time: number) {
-    const date = new Date(time);
-    return date.toISOString().split('T')[0];
-  }
-}
+  return (
+    <Agenda
+      testID={testIDs.agenda.CONTAINER}
+      items={items}
+      loadItemsForMonth={loadItems}
+      selected={current.toISOString()}
+      renderItem={renderItem}
+      renderEmptyDate={renderEmptyDate}
+      rowHasChanged={(r1, r2) => r1.name !== r2.name}
+      showClosingKnob={true}
+    />
+  );
+};
 
 const styles = StyleSheet.create({
   item: {
     backgroundColor: 'white',
     flex: 1,
+    flexDirection: 'column',
     borderRadius: 5,
     padding: 10,
     marginRight: 10,
-    marginTop: 17
+    marginTop: 17,
   },
-  emptyDate: {
-    height: 15,
-    flex: 1,
-    paddingTop: 30
-  },
-  customDay: {
-    margin: 10,
-    fontSize: 24,
-    color: 'green'
-  },
-  dayItem: {
-    marginLeft: 34
-  }
 });
+
+export default AgendaScreen;

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { Text } from 'react-native';
 import styled from 'styled-components';
 import DatePicker from 'react-native-date-picker';
-import { CustomModal } from 'c'
+import { useNavigation } from '@react-navigation/native';
 
 const Container = styled.ScrollView`
   flex: 1;
   background: #FFFFFF;
   flex-direction: column;
+  paddingTop: 15px;
 `;
 
 const FormContainer = styled.View`
@@ -21,6 +21,7 @@ const LabelInput = styled.Text`
   fontSize: 14px;
   textAlign: left;
   fontWeight: 600;
+  marginBottom: 5px;
 `;
 
 const Input = styled.TextInput`
@@ -41,33 +42,28 @@ const Button = styled.TouchableOpacity`
 `;
 
 const ButtonText = styled.Text`
-  color: #FFFFFF; /* Color del texto del botón */
+  color: #FFFFFF;
   font-size: 16px;
   text-align: center;
   font-weight: 600;
 `;
 
-const OpenModalButton = styled.Button`
-  background-color: #007bff;
-  color: #fff;
-  padding: 12px 20px;
-  font-size: 16px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+const AddFriendsButton = styled.TouchableOpacity`
+  alignSelf: center;
+  width: 200px;
+  background-color: #01c8fb; /* Color de fondo del botón */
+  padding: 15px 30px;
+  border-radius: 35px;
+  marginTop: 20px;
 `;
 
 function CreateEventScreen () {
   const [date, setDate] = useState(new Date());
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigation = useNavigation();
 
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
+  const openModal = () => {
+    navigation.navigate('AddFriendsModal');
+  }
 
   return (
     <Container contentContainerStyle={{ alignItems: 'center' }} >
@@ -80,8 +76,9 @@ function CreateEventScreen () {
         <Input />
         <LabelInput>Hora</LabelInput>
         <DatePicker style={{ alignSelf: 'center' }} mode='time' date={date} onDateChange={setDate} />
-        {/* <OpenModalButton onClick={handleOpenModal}>Abrir Modal</OpenModalButton> */}
-        {/* <CustomModal isOpen={isModalOpen} onClose={handleCloseModal} /> */}
+        <AddFriendsButton onPress={openModal}>
+          <ButtonText>Invitar amigos</ButtonText>
+        </AddFriendsButton>
         <Button>
           <ButtonText>Publicar</ButtonText>
         </Button>
