@@ -80,7 +80,7 @@ function CreateEventScreen () {
           <ButtonText>Invitar amigos</ButtonText>
         </AddFriendsButton>
         <Button>
-          <ButtonText>Publicar</ButtonText>
+          <ButtonText>Guardar</ButtonText>
         </Button>
       </FormContainer>
     </Container>

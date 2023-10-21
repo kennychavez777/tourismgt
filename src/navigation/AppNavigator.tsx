@@ -13,7 +13,6 @@ import SignUpScreen from '../screens/SignUpScreen';
 import Dashboard from '../screens/Dashboard';
 import SearchScreen from '../screens/SearchScreen';
 import CreatePostScreen from '../screens/CreatePostScreen';
-import ScheduleScreen from '../screens/ScheduleScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import PostDetailScreen from '../screens/PostDetail';
 import EditProfileScreen from '../screens/EditProfileScreen';
@@ -36,7 +35,7 @@ function StackGroup() {
 			<Stack.Group>
 				<Stack.Screen
 					name="DashboardMain"
-					component={ Dashboard }
+					component={ LoginScreen }
 					options={{ headerShown: false }}
 				/>
 				<Stack.Screen name="Login" component={LoginScreen} />

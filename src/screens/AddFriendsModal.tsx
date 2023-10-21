@@ -1,5 +1,6 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { ScrollView, View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 
 const AddFriendsModalContainer = styled.ScrollView`
@@ -31,8 +32,25 @@ const ToggleContainer = styled.View`
   margin-left: auto;
 `;
 
+const Button = styled.TouchableOpacity`
+	alignSelf: center;
+	width: 200px;
+  background-color: #01c8fb; /* Color de fondo del botón */
+  padding: 15px 30px;
+  border-radius: 35px;
+  marginTop: 20px;
+`;
+
+const ButtonText = styled.Text`
+  color: #FFFFFF;
+  font-size: 16px;
+  text-align: center;
+  font-weight: 600;
+`;
+
 const AddFriendsModal = () => {
   const [selectedContacts, setSelectedContacts] = useState([]);
+  const navigation = useNavigation()
 
   const toggleContactSelection = (contactId) => {
     if (selectedContacts.includes(contactId)) {
@@ -49,6 +67,10 @@ const AddFriendsModal = () => {
     { id: 4, name: 'Humberto Rodriguez', image: 'https://yt3.googleusercontent.com/ytc/AOPolaTqtKeqkDGtMCiXSyCnLcYRMGggZIz9L-Gpt5i4CA=s900-c-k-c0x00ffffff-no-rj' },
     { id: 5, name: 'Jenn Hernandez', image: 'https://yt3.googleusercontent.com/ytc/AOPolaTqtKeqkDGtMCiXSyCnLcYRMGggZIz9L-Gpt5i4CA=s900-c-k-c0x00ffffff-no-rj' },
   ];
+
+  const goBack = () => {
+    navigation.goBack();
+  }
 
   return (
     <AddFriendsModalContainer>
@@ -89,6 +111,9 @@ const AddFriendsModal = () => {
           </ContactItem>
         </TouchableOpacity>
       ))}
+      <Button onPress={goBack}>
+        <ButtonText>Guardar</ButtonText>
+      </Button>
     </AddFriendsModalContainer>
   );
 };

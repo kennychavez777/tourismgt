@@ -60,10 +60,10 @@ const AgendaScreen = () => {
       <TouchableOpacity
         testID={testIDs.agenda.ITEM}
         style={[styles.item, { height: item ? item.height : 0 }]}
-        onPress={() => Alert.alert("hey!")}
+        onPress={() => Alert.alert("Evento para comer pizza")}
         // onPress={() => navigation.navigate('CreateEvent')}
       >
-        <Text style={{ fontSize, color }}>{"Heey"}</Text>
+        <Text style={{ fontSize, color }}>{"Evento para comer pizza"}</Text>
       </TouchableOpacity>
     );
   };

@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigation } from '@react-navigation/native';
+import { FIREBASE_AUTH } from '../firebase/config';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { ActivityIndicator } from 'react-native';
+import { messages, showError } from '../utils/errors';
 
 const Container = styled.View`
 	flex: 1;
@@ -57,7 +61,36 @@ const RegisterText = styled.Text`
 function SignUpScreen() {
 	const [ email, setEmail ] = useState('');
 	const [ password, setPassword ] = useState('');
+	const [ confirmPassword, setConfirmPassword ] = useState('');
+	const [ userName, setUserName ] = useState('');
+	const [ loading, setLoading ] = useState(false);
+	const auth = FIREBASE_AUTH;
 	const navigation = useNavigation();
+
+	const createUser = async () => {
+		setLoading(true);
+
+		try {
+			if (password === confirmPassword) {
+				const response = await createUserWithEmailAndPassword(auth, email, password);
+				const user = {
+					email, password, userName
+				}
+				//await addDoc(collection(db, 'users'), user);
+				console.log('====================================');
+				console.log('I wanna see the error', response, user);
+				console.log('====================================');
+			} else {
+				showError('Error', 'Las contraseñas no son iguales.')
+			}
+		} catch( error ) {
+			showError('Error', messages[error['code']]);
+		} finally {
+			setLoading(false);
+		}
+	}
+
+	
 
 	const changeToLogin = () => {
 		console.log('going to sign up screen');
@@ -76,24 +109,32 @@ function SignUpScreen() {
 			<TextInput
 				placeholder="Nombre de usuario"
 				placeholderTextColor="#999999"
-				value={email}
-				onChangeText={(text: string) => setEmail(text)}
+				value={userName}
+				onChangeText={(text: string) => setUserName(text)}
 			/>
 			<TextInput
 				placeholder="Contraseña"
 				placeholderTextColor="#999999"
 				value={password}
+				secureTextEntry={true}
 				onChangeText={(text: string) => setPassword(text)}
 			/>
 			<TextInput
 				placeholder="Contraseña"
 				placeholderTextColor="#999999"
-				value={password}
-				onChangeText={(text: string) => setPassword(text)}
+				value={confirmPassword}
+				secureTextEntry={true}
+				onChangeText={(text: string) => setConfirmPassword(text)}
 			/>
-			<Button onPress={() => console.log('login')}>
-				<ButtonText>Entrar</ButtonText>
-			</Button>
+			{ 
+				loading ? 
+					<ActivityIndicator size="large" color="#0000ff" />
+					:  
+					<Button onPress={createUser}>
+						<ButtonText>Entrar</ButtonText>
+					</Button>
+			}
+			
 
 			<FullRegisterText>
 				¿Ya tienes cuenta?

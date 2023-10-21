@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigation } from '@react-navigation/native';
+import { FIREBASE_AUTH } from '../firebase/config';
+import { ActivityIndicator } from 'react-native';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 const Container = styled.View`
 	flex: 1;
@@ -57,6 +60,8 @@ const RegisterText = styled.Text`
 function LoginScreen() {
 	const [ email, setEmail ] = useState('');
 	const [ password, setPassword ] = useState('');
+	const [ loading, setLoading ] = useState(false);
+	const auth = FIREBASE_AUTH;
 	const navigation = useNavigation();
 
 	const changeToSignUp = () => {
@@ -64,9 +69,21 @@ function LoginScreen() {
 		navigation.navigate('SignUp');
 	}
 
-	const login = () => {
+	const login = async () => {
+		setLoading(true);
+		try {
+			const response = await signInWithEmailAndPassword(auth, email, password);
+			console.log('====================================');
+			console.log(response);
+			console.log('====================================');
+		} catch (error) {
+			console.log('====================================');
+			console.log(error);
+			console.log('====================================');
+		} finally {
+			setLoading(false);
+		}
 		navigation.navigate('Dashboard');
-		console.log('going to dashboard');
 	}
 
 	return (
@@ -76,17 +93,24 @@ function LoginScreen() {
 				placeholder="Correo electrónico"
 				placeholderTextColor="#999999"
 				value={email}
+				autoCapitalize="none"
 				onChangeText={(text: string) => setEmail(text)}
 			/>
 			<TextInput
 				placeholder="Contraseña"
+				secureTextEntry={true}
 				placeholderTextColor="#999999"
 				value={password}
 				onChangeText={(text: string) => setPassword(text)}
 			/>
-			<Button onPress={login}>
-				<ButtonText>Entrar</ButtonText>
-			</Button>
+
+			{ 
+				loading ? 
+					<ActivityIndicator size="large" color="#0000ff" />:  
+				<Button onPress={login}>
+					<ButtonText>Entrar</ButtonText>
+				</Button>
+			}
 
 			<FullRegisterText>
 				¿No tienes cuenta?
