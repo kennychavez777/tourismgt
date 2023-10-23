@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigation } from '@react-navigation/native';
 import { FIREBASE_AUTH } from '../firebase/config';
+import { FIRESTORE as db } from '../firebase/config';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { ActivityIndicator } from 'react-native';
 import { messages, showError } from '../utils/errors';
+import { addDoc, collection } from 'firebase/firestore';
+import { useSession } from '../hooks/useSession';
 
 const Container = styled.View`
 	flex: 1;
@@ -66,6 +69,7 @@ function SignUpScreen() {
 	const [ loading, setLoading ] = useState(false);
 	const auth = FIREBASE_AUTH;
 	const navigation = useNavigation();
+	const { saveUser, session } = useSession();
 
 	const createUser = async () => {
 		setLoading(true);
@@ -73,17 +77,23 @@ function SignUpScreen() {
 		try {
 			if (password === confirmPassword) {
 				const response = await createUserWithEmailAndPassword(auth, email, password);
-				const user = {
+				const newUser = {
 					email, password, userName
 				}
-				//await addDoc(collection(db, 'users'), user);
-				console.log('====================================');
-				console.log('I wanna see the error', response, user);
-				console.log('====================================');
+
+				await addDoc(collection(db, 'users'), newUser);
+
+				const { user } = response;
+				saveUser({
+					displayName: user.displayName,
+					email: user.email,
+					accessToken: user.accessToken
+				});
 			} else {
 				showError('Error', 'Las contraseñas no son iguales.')
 			}
 		} catch( error ) {
+			console.log('error', error)
 			showError('Error', messages[error['code']]);
 		} finally {
 			setLoading(false);

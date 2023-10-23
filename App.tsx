@@ -3,11 +3,13 @@ import './src/utils/warnings';
 import React from 'react';
 
 import AppNavigator from './src/navigation/AppNavigator';
-import SessionContext from "./src/context/SessionContext";
+import { SessionProvider } from './src/context/SessionContext';
 
 function App() {
   return (
-      <AppNavigator />
+      <SessionProvider>
+        <AppNavigator />
+      </SessionProvider>
   );
 }
 

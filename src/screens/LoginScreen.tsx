@@ -4,6 +4,8 @@ import { useNavigation } from '@react-navigation/native';
 import { FIREBASE_AUTH } from '../firebase/config';
 import { ActivityIndicator } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { messages, showError } from '../utils/errors';
+import { useSession } from '../hooks/useSession';
 
 const Container = styled.View`
 	flex: 1;
@@ -62,7 +64,9 @@ function LoginScreen() {
 	const [ password, setPassword ] = useState('');
 	const [ loading, setLoading ] = useState(false);
 	const auth = FIREBASE_AUTH;
+	
 	const navigation = useNavigation();
+	const { saveUser, session } = useSession();
 
 	const changeToSignUp = () => {
 		console.log('going to sign up screen');
@@ -73,13 +77,16 @@ function LoginScreen() {
 		setLoading(true);
 		try {
 			const response = await signInWithEmailAndPassword(auth, email, password);
-			console.log('====================================');
-			console.log(response);
-			console.log('====================================');
+
+			const { user } = response;
+			saveUser({
+				displayName: user.displayName,
+				email: user.email,
+				accessToken: user.accessToken
+			});
 		} catch (error) {
-			console.log('====================================');
-			console.log(error);
-			console.log('====================================');
+			console.log('error ', error)
+			showError('Error', messages[error['code']]);
 		} finally {
 			setLoading(false);
 		}

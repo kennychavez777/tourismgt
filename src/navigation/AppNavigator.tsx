@@ -106,8 +106,6 @@ function BottomTabGroup() {
 	);
 }
 
-const RootStack = createNativeStackNavigator();
-
 export default function AppNavigator () {
 	return (
 		<NavigationContainer>

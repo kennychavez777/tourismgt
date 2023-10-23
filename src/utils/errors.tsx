@@ -19,7 +19,8 @@ export const messages = {
   'auth/invalid-uid': 'UID invalido.',
   'auth/user-not-found': 'Usuario no encontrado.',
   'auth/uid-already-exists': 'El UID del usuario ya existe.',
-  'auth/too-many-requests': 'Demasiadas peticiones, por favor espere un momento.'
+  'auth/too-many-requests': 'Demasiadas peticiones, por favor espere un momento.',
+  'auth/wrong-password': 'Las credenciales son inválidas.'
 }
 
 export const showError = (title: string, msg: string) => {
