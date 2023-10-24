@@ -21,7 +21,10 @@ export const messages = {
   'auth/uid-already-exists': 'El UID del usuario ya existe.',
   'auth/too-many-requests': 'Demasiadas peticiones, por favor espere un momento.',
   'auth/wrong-password': 'Las credenciales son inválidas.',
-  'img/error-selection': 'Hubo un error al seleccionar la imagen.'
+  'img/error-selection': 'Hubo un error al seleccionar la imagen.',
+  'storage/object-not-found': 'No se encontró el archivo correspondiente.',
+  'storage/unauthorized': 'El usuario no tiene permisos para acceder al objeto.',
+  'storage/canceled': 'Se canceló la subida de la imagen.'
 }
 
 export const showError = (title: string, msg: string) => {

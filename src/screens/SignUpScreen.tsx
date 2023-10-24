@@ -101,8 +101,6 @@ function SignUpScreen() {
 		}
 	}
 
-	
-
 	const changeToLogin = () => {
 		console.log('going to sign up screen');
 		navigation.navigate('Login');

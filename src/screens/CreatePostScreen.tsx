@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ImagePickerButton from '../components/ImagePickerButton';
 
@@ -7,6 +7,8 @@ import { STORAGE as st, FIRESTORE as db } from '../firebase/config';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { addDoc, collection, updateDoc, doc } from 'firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
+import { ActivityIndicator } from 'react-native';
+import { messages, showError } from '../utils/errors';
 
 const Container = styled.ScrollView`
   flex: 1;
@@ -57,9 +59,11 @@ function CreatePostScreen () {
   const [ location, setLocation ] =  useState('');
   const [ selectedImages, setSelectedImages ] = useState([]);
   const [ uploadedImages, setUploadedImages ] = useState<String []>([]);
+  const [ loading, setLoading ] = useState(false);
   const navigation = useNavigation();
 
   const uploadPost = async() => {
+    setLoading(true);
     const post = {
       title, description, location, selectedImages: []
     }
@@ -70,10 +74,21 @@ function CreatePostScreen () {
     setUploadedImages([]);
     selectedImages.map((item, i) => {
       uploadImage(item['uri'], id)
-    })
-    console.log('====================================');
-    console.log('post ', uploadedImages);
-    console.log('====================================');
+    });
+
+    setTimeout(() => {
+      navigation.navigate('Inicio');
+      cleanForm();
+    }, 1500)
+    setLoading(false);
+  }
+
+  const cleanForm = () => {
+    setTitle('');
+    setDescription('');
+    setLocation('');
+    setSelectedImages([]);
+    setUploadedImages([]);
   }
 
   const uploadImage = async(uri: string, id: string) => {
@@ -87,19 +102,16 @@ function CreatePostScreen () {
     uploadTask.on('state_changed',
       (snapshot) => {
         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log('====================================');
         console.log('progress ', progress);
-        console.log('====================================');
       },
       (error) => {
         // handle error
+        console.log('Storage Error in CreatePostScreen ', error);
+        showError('Error', messages[error['code']]);
       },
       () => {
         // complete
         getDownloadURL(uploadTask.snapshot.ref).then(async(url) => {
-          console.log('====================================');
-          console.log('url', url);
-          console.log('====================================');
           setUploadedImages(current => [
             ...current, url
           ])
@@ -108,15 +120,11 @@ function CreatePostScreen () {
           const data = {
             selectedImages: uploadedImages,
           }
-
+          console.log('images ', uploadedImages, selectedImages)
           updateDoc(docRef, data);
         })
       }
     )
-  }
-
-  const getImages = (images: any) => {
-    setSelectedImages(images);
   }
 
   return (
@@ -140,10 +148,16 @@ function CreatePostScreen () {
           onChangeText={(text: string) => setLocation(text)}
         />
         <LabelInput>Seleccionar fotos</LabelInput>
-        <ImagePickerButton getImages={getImages} />
-        <Button onPress={uploadPost}>
-          <ButtonText>Publicar</ButtonText>
-        </Button>
+        <ImagePickerButton selectedImages={selectedImages} setSelectedImages={setSelectedImages} />
+        { 
+          loading ? 
+            <ActivityIndicator size="large" color="#0000ff" />
+            :  
+            <Button onPress={uploadPost}>
+              <ButtonText>Publicar</ButtonText>
+            </Button>
+        }
+        
       </FormContainer>
     </Container>
   );

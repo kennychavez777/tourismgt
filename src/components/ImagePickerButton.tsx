@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
 import styled from 'styled-components/native';
 import * as ImagePicker from 'react-native-image-picker';
@@ -41,8 +41,8 @@ const SelectedImage = styled.Image`
   margin: 8px;
 `;
 
-function ImagePickerButton({ getImages }) {
-  const [ selectedImages, setSelectedImages ] = useState([]);
+function ImagePickerButton({ selectedImages, setSelectedImages }) {
+  // const [ selectedImages, setSelectedImages ] = useState([]);
 
   const handleImagePicker = () => {
     const options = {
@@ -61,12 +61,11 @@ function ImagePickerButton({ getImages }) {
         console.log('Error al seleccionar imágenes:', response.error);
       } else {
         // Maneja las imágenes seleccionadas y agrega al estado
+        console.log('omg ', selectedImages);
         setSelectedImages([...selectedImages, ...response.assets]);
       }
     });
   };
-
-  getImages(selectedImages);
 
   return (
     <Container>
