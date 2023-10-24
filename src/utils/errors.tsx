@@ -20,7 +20,8 @@ export const messages = {
   'auth/user-not-found': 'Usuario no encontrado.',
   'auth/uid-already-exists': 'El UID del usuario ya existe.',
   'auth/too-many-requests': 'Demasiadas peticiones, por favor espere un momento.',
-  'auth/wrong-password': 'Las credenciales son inválidas.'
+  'auth/wrong-password': 'Las credenciales son inválidas.',
+  'img/error-selection': 'Hubo un error al seleccionar la imagen.'
 }
 
 export const showError = (title: string, msg: string) => {

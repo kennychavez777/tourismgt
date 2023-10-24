@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { View, Button, FlatList, Image } from 'react-native';
+import { FlatList } from 'react-native';
 import styled from 'styled-components/native';
 import * as ImagePicker from 'react-native-image-picker';
 
 // Icon
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faPaperclip } from '@fortawesome/free-solid-svg-icons';
+import { showError, messages } from '../utils/errors';
 
 const Container = styled.View`
   flex: 1;
@@ -40,12 +41,13 @@ const SelectedImage = styled.Image`
   margin: 8px;
 `;
 
-function ImagePickerButton() {
-  const [selectedImages, setSelectedImages] = useState([]);
+function ImagePickerButton({ getImages }) {
+  const [ selectedImages, setSelectedImages ] = useState([]);
 
   const handleImagePicker = () => {
     const options = {
       mediaType: 'photo',
+      allowsEditing: true,
       maxWidth: 800,
       maxHeight: 800,
       multiple: true, // Permite seleccionar múltiples fotos
@@ -55,6 +57,7 @@ function ImagePickerButton() {
       if (response.didCancel) {
         console.log('El usuario canceló la selección de imágenes');
       } else if (response.error) {
+        showError('Error', messages['img/error-selection']);
         console.log('Error al seleccionar imágenes:', response.error);
       } else {
         // Maneja las imágenes seleccionadas y agrega al estado
@@ -62,6 +65,8 @@ function ImagePickerButton() {
       }
     });
   };
+
+  getImages(selectedImages);
 
   return (
     <Container>

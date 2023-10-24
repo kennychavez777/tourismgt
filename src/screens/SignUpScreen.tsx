@@ -13,6 +13,7 @@ const Container = styled.View`
 	flex: 1;
 	justify-content: center;
 	align-center: center;
+	background-color: #FFFFFF;
 `;
 
 const Title = styled.Text`

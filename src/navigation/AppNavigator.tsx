@@ -21,46 +21,9 @@ import CreateEventsScreen from '../screens/CreateEventScreen';
 /// Agenda testing
 import AgendaScreen from '../screens/AgendaScreen';
 import AddFriendsModal from '../screens/AddFriendsModal';
+import { useSession } from '../hooks/useSession';
 
-// Stack
-const Stack = createNativeStackNavigator();
-
-function StackGroup() {
-	return (
-		<Stack.Navigator
-			screenOptions={{
-				// headerShown: false
-			}}
-		>
-			<Stack.Group>
-				<Stack.Screen
-					name="DashboardMain"
-					component={ LoginScreen }
-					options={{ headerShown: false }}
-				/>
-				<Stack.Screen name="Login" component={LoginScreen} />
-				<Stack.Screen name="SignUp" component={SignUpScreen} />
-				<Stack.Screen
-					name="Search"
-					component={SearchScreen}
-					options={{
-						headerShown: false,
-					}}
-				/>
-				<Stack.Screen name="CreatePost" component={CreatePostScreen} />
-				<Stack.Screen name="Schedule" component={AgendaScreen} />
-				<Stack.Screen name="Profile" component={ProfileScreen} />
-				<Stack.Screen name="PostDetail" component={PostDetailScreen} />
-				<Stack.Screen name="Edit Profile" component={EditProfileScreen} />
-				<Stack.Screen name="CreateEvent" component={CreateEventsScreen} />
-			</Stack.Group>
-			<Stack.Group screenOptions={{ presentation: 'modal' }}>
-				<Stack.Screen name="AddFriendsModal" component={AddFriendsModal} />
-			</Stack.Group>
-		</Stack.Navigator>
-	)
-}
-
+// Tabs
 const Tab = createBottomTabNavigator();
 
 function BottomTabGroup() {
@@ -71,15 +34,15 @@ function BottomTabGroup() {
 				tabBarIcon: ({ color, focused, size}) => {
 					let myIcon = faHome;
 
-					if (route.name === 'Dashboard') {
+					if (route.name === 'Inicio') {
 						myIcon = faHome;
-					} else if (route.name === 'Search') {
+					} else if (route.name === 'Buscar') {
 						myIcon = faMagnifyingGlass;
-					} else if ( route.name === 'CreatePost') {
+					} else if ( route.name === 'Crear Post') {
 						myIcon = faPlus
-					} else if ( route.name === 'Schedule') {
+					} else if ( route.name === 'Eventos') {
 						myIcon = faCalendarDays;
-					}else if ( route.name === 'Profile') {
+					}else if ( route.name === 'Perfil') {
 						myIcon = faUser;
 					}
 
@@ -88,28 +51,76 @@ function BottomTabGroup() {
 			})}
 		>
 			<Tab.Screen
-				name="Dashboard" component={StackGroup} options={{headerShown: false}}
+				name="Inicio" component={Dashboard} 
 			/>
 			<Tab.Screen
-				name="Search" component={SearchScreen}
+				name="Buscar" component={SearchScreen}
 			/>
 			<Tab.Screen 
-				name="CreatePost" component={CreatePostScreen} 
+				name="Crear Post" component={CreatePostScreen} 
 			/>
 			<Tab.Screen 
-				name="Schedule" component={AgendaScreen} 
+				name="Eventos" component={AgendaScreen} 
 			/>
 			<Tab.Screen 
-				name="Profile" component={ProfileScreen}
+				name="Perfil" component={ProfileScreen}
 			/>
 		</Tab.Navigator>
 	);
+}
+// Stack
+const Stack = createNativeStackNavigator();
+
+function StackGroup() {
+	// Session
+	const { session } = useSession();
+	console.log('====================================');
+	console.log(session);
+	console.log('====================================');
+	return (
+		<Stack.Navigator
+			screenOptions={{
+				headerShown: false
+			}}
+		>
+			{
+				session.accessToken === '' ? (
+					<Stack.Group>
+						<Stack.Screen name="Login" component={LoginScreen} />
+						<Stack.Screen name="SignUp" component={SignUpScreen} />
+					</Stack.Group>
+				) : (
+					<Stack.Group>
+						<Stack.Screen name="Dashboard" component={ BottomTabGroup }/>
+						<Stack.Screen
+							name="Search"
+							component={SearchScreen}
+							options={{
+								headerShown: false,
+							}}
+						/>
+						<Stack.Screen name="Crear Post" component={CreatePostScreen} />
+						<Stack.Screen name="Eventos" component={AgendaScreen} />
+						<Stack.Screen name="Perfil" component={ProfileScreen} />
+						<Stack.Screen name="Detalle de Post" component={PostDetailScreen} />
+						<Stack.Screen name="Editar Perfil" component={EditProfileScreen} />
+						<Stack.Screen name="Crear Evento" component={CreateEventsScreen} />
+					</Stack.Group>
+				)
+			}
+			
+			<Stack.Group screenOptions={{ presentation: 'modal' }}>
+				<Stack.Screen name="AddFriendsModal" component={AddFriendsModal} />
+			</Stack.Group>
+		</Stack.Navigator>
+	)
 }
 
 export default function AppNavigator () {
 	return (
 		<NavigationContainer>
-			<BottomTabGroup />
+			{/* <BottomTabGroup /> */}
+			<StackGroup/>
 		</NavigationContainer>
 	)
 }
