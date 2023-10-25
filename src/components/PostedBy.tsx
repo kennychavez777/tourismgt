@@ -52,16 +52,16 @@ const LikeContainer = styled.View`
   paddingTop: 15px;
 `;
 
-const PostedBy = () => {
+const PostedBy = ({by}) => {
   return (
     <Container>
       <Picture
-        source={{ uri: 'https://yt3.googleusercontent.com/ytc/AOPolaTqtKeqkDGtMCiXSyCnLcYRMGggZIz9L-Gpt5i4CA=s900-c-k-c0x00ffffff-no-rj' }}
+        source={{ uri: by.profile_pic }}
       />
       <UsernameContainer>
         <DataContainer>
           <PostedByLabel>Publicado por</PostedByLabel>
-          <UserNameLabel>@carmenluna</UserNameLabel>
+          <UserNameLabel>@{by.userName}</UserNameLabel>
         </DataContainer>
         <LikeContainer>
           <ActionItemContainer>

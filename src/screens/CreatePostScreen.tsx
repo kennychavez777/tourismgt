@@ -9,6 +9,8 @@ import { addDoc, collection, updateDoc, doc } from 'firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import { ActivityIndicator } from 'react-native';
 import { messages, showError } from '../utils/errors';
+import { getCurrentDateAndTime } from '../utils/utilities';
+import { useSession } from '../hooks/useSession';
 
 const Container = styled.ScrollView`
   flex: 1;
@@ -61,13 +63,22 @@ function CreatePostScreen () {
   const [ uploadedImages, setUploadedImages ] = useState<String []>([]);
   const [ loading, setLoading ] = useState(false);
   const navigation = useNavigation();
+  const { session } = useSession();
 
   const uploadPost = async() => {
     setLoading(true);
     const post = {
-      title, description, location, selectedImages: []
+      title, description, location, selectedImages: [],
+      createdAt: getCurrentDateAndTime(),
+      postedBy: {
+        id: session.id,
+        userName: session.userName,
+        email: session.email,
+        profile_pic: session.profile_pic,
+      },
+      likes: 0,
+      comments: [],
     }
-
     // save in db
     const firestore_response = await addDoc(collection(db, 'posts'), post);
     const id = firestore_response._key.path.segments[1];

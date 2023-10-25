@@ -79,9 +79,6 @@ function StackGroup() {
 	console.log('====================================');
 	return (
 		<Stack.Navigator
-			screenOptions={{
-				headerShown: false
-			}}
 		>
 			{
 				session.accessToken === '' ? (
@@ -91,7 +88,9 @@ function StackGroup() {
 					</Stack.Group>
 				) : (
 					<Stack.Group>
-						<Stack.Screen name="Dashboard" component={ BottomTabGroup }/>
+						<Stack.Screen name="Dashboard" component={ BottomTabGroup } options={{
+								headerShown: false,
+							}}/>
 						<Stack.Screen
 							name="Search"
 							component={SearchScreen}

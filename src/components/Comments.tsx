@@ -56,7 +56,7 @@ const CommentText = styled.Text`
   width: 80%;
 `;
 
-const Comments = () => {
+const Comments = ({ postId }) => {
   return (
     <Container>
       <Title>6 Comentarios</Title>

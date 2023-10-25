@@ -61,7 +61,6 @@ function ImagePickerButton({ selectedImages, setSelectedImages }) {
         console.log('Error al seleccionar imágenes:', response.error);
       } else {
         // Maneja las imágenes seleccionadas y agrega al estado
-        console.log('omg ', selectedImages);
         setSelectedImages([...selectedImages, ...response.assets]);
       }
     });

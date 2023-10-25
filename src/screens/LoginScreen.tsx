@@ -67,7 +67,7 @@ function LoginScreen() {
 	const auth = FIREBASE_AUTH;
 	
 	const navigation = useNavigation();
-	const { saveUser, session } = useSession();
+	const { saveUser, getFullUser } = useSession();
 
 	const changeToSignUp = () => {
 		console.log('going to sign up screen');
@@ -79,19 +79,17 @@ function LoginScreen() {
 		try {
 			const response = await signInWithEmailAndPassword(auth, email, password);
 
-			const { user } = response;
-			saveUser({
-				displayName: user.displayName,
-				email: user.email,
-				accessToken: user.accessToken
-			});
+			if (response.user){
+				const user = await getFullUser(email);
+				saveUser(user);
+			}
 		} catch (error) {
 			console.log('error ', error)
 			showError('Error', messages[error['code']]);
 		} finally {
 			setLoading(false);
 		}
-		navigation.navigate('Dashboard');
+		// navigation.navigate('Dashboard');
 	}
 
 	return (

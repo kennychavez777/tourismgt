@@ -8,6 +8,7 @@ import { ActivityIndicator } from 'react-native';
 import { messages, showError } from '../utils/errors';
 import { addDoc, collection } from 'firebase/firestore';
 import { useSession } from '../hooks/useSession';
+import { getCurrentDateAndTime } from '../utils/utilities';
 
 const Container = styled.View`
 	flex: 1;
@@ -79,16 +80,24 @@ function SignUpScreen() {
 			if (password === confirmPassword) {
 				const response = await createUserWithEmailAndPassword(auth, email, password);
 				const newUser = {
-					email, password, userName
+					email, userName, 
+					createdAt: getCurrentDateAndTime(),
+					updatedAt: getCurrentDateAndTime(),
+					profile_pic: 'https://firebasestorage.googleapis.com/v0/b/tourism-gt.appspot.com/o/default%2Fuser-icon.jpg?alt=media&token=230702d9-c172-49ba-a410-037fdd019c7e&_gl=1*144mhhn*_ga*MTY5NzE4OTkyLjE2OTcwMDEyMTg.*_ga_CW55HF8NVT*MTY5ODIxMDM3MC4zMS4xLjE2OTgyMTA0ODkuMTIuMC4w',
+					total_likes: 0,
+					total_posts: 0
 				}
 
 				await addDoc(collection(db, 'users'), newUser);
 
 				const { user } = response;
 				saveUser({
-					displayName: user.displayName,
+					displayName: userName,
 					email: user.email,
-					accessToken: user.accessToken
+					accessToken: user.accessToken,
+					profile_pic: 'https://firebasestorage.googleapis.com/v0/b/tourism-gt.appspot.com/o/default%2Fuser-icon.jpg?alt=media&token=230702d9-c172-49ba-a410-037fdd019c7e&_gl=1*144mhhn*_ga*MTY5NzE4OTkyLjE2OTcwMDEyMTg.*_ga_CW55HF8NVT*MTY5ODIxMDM3MC4zMS4xLjE2OTgyMTA0ODkuMTIuMC4w',
+					total_likes: 0,
+					total_posts: 0
 				});
 			} else {
 				showError('Error', 'Las contraseñas no son iguales.')
