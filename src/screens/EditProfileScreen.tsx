@@ -59,7 +59,8 @@ const ButtonText = styled.Text`
   font-weight: 600;
 `;
 
-function EditProfileScreen() {
+function EditProfileScreen({ route, navigation }) {
+  console.log('route params edit profile ', route.params)
   return (
     <Container contentContainerStyle={{ alignItems: 'center' }} >
       <ProfilePic source={{ uri: 'https://yt3.googleusercontent.com/ytc/AOPolaTqtKeqkDGtMCiXSyCnLcYRMGggZIz9L-Gpt5i4CA=s900-c-k-c0x00ffffff-no-rj' }} />

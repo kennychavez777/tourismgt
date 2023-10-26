@@ -6,6 +6,7 @@ import ImageCarousel from '../components/GalleryPost';
 import ActionsButtons from '../components/ActionsButtons';
 import { FIRESTORE as db } from '../firebase/config';
 import { collection, query, onSnapshot, orderBy } from 'firebase/firestore';
+import { useNavigation } from '@react-navigation/native';
 
 const Container = styled.ScrollView`
 	flex: 1;
@@ -27,7 +28,7 @@ const HeaderPostContainer = styled.View`
   flex-direction: row;
 `;
 
-const UserContainer = styled.View`
+const UserContainer = styled.TouchableOpacity`
   marginLeft: 10px;
 `;
 
@@ -58,6 +59,7 @@ const PostTitle = styled.Text`
 
 function Dashboard () {
   const [ posts, setPosts ] = useState([]);
+  const navigation = useNavigation();
 
   useEffect(() => {
     getAllPosts();
@@ -94,7 +96,7 @@ function Dashboard () {
             <Post key={index}>
               <HeaderPostContainer>
                 <Avatar imageSource={{uri: 'https://firebasestorage.googleapis.com/v0/b/tourism-gt.appspot.com/o/default%2Fuser-icon.jpg?alt=media&token=230702d9-c172-49ba-a410-037fdd019c7e&_gl=1*1gfvdzj*_ga*MTY5NzE4OTkyLjE2OTcwMDEyMTg.*_ga_CW55HF8NVT*MTY5ODIxNjY5Mi4zMi4xLjE2OTgyMTczNjUuNTUuMC4w'}} />
-                <UserContainer>
+                <UserContainer onPress={() => navigation.navigate('Perfil de', { userId: item.postedBy.id })}>
                   <UserNameText>@{item.postedBy.userName}</UserNameText>
                   <PlaceText>{item.location}</PlaceText>
                 </UserContainer>

@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { SessionContext } from '../context/SessionContext.jsx';
 import { FIRESTORE as db } from '../firebase/config.js';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 
 export function useSession () {
   const { session, setSession } = useContext(SessionContext);
@@ -31,5 +31,17 @@ export function useSession () {
     return user;
   }
 
-  return { session, setSession, saveUser, logout, getFullUser };
+  const getUserById = async(userId) => {
+    const docRef = doc(db, 'users', userId);
+    const snapshot = await getDoc(docRef);
+    let user = {};
+    
+    if (snapshot.exists()) {
+      user = snapshot.data();
+    }
+
+    return user;
+  }
+
+  return { session, setSession, saveUser, logout, getFullUser, getUserById };
 }

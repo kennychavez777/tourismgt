@@ -42,7 +42,7 @@ function BottomTabGroup() {
 						myIcon = faPlus
 					} else if ( route.name === 'Eventos') {
 						myIcon = faCalendarDays;
-					}else if ( route.name === 'Perfil') {
+					}else if ( route.name === 'Mi Perfil') {
 						myIcon = faUser;
 					}
 
@@ -63,7 +63,9 @@ function BottomTabGroup() {
 				name="Eventos" component={AgendaScreen} 
 			/>
 			<Tab.Screen 
-				name="Perfil" component={ProfileScreen}
+				name="Mi Perfil" component={ProfileScreen} options={{
+					headerShown: false,
+				}}
 			/>
 		</Tab.Navigator>
 	);
@@ -100,7 +102,7 @@ function StackGroup() {
 						/>
 						<Stack.Screen name="Crear Post" component={CreatePostScreen} />
 						<Stack.Screen name="Eventos" component={AgendaScreen} />
-						<Stack.Screen name="Perfil" component={ProfileScreen} />
+						<Stack.Screen name="Perfil de" component={ProfileScreen} />
 						<Stack.Screen name="Detalle de Post" component={PostDetailScreen} />
 						<Stack.Screen name="Editar Perfil" component={EditProfileScreen} />
 						<Stack.Screen name="Crear Evento" component={CreateEventsScreen} />
