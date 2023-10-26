@@ -5,7 +5,7 @@ import Avatar from '../components/ProfilePic';
 import ImageCarousel from '../components/GalleryPost';
 import ActionsButtons from '../components/ActionsButtons';
 import { FIRESTORE as db } from '../firebase/config';
-import { collection, query, onSnapshot } from 'firebase/firestore';
+import { collection, query, onSnapshot, orderBy } from 'firebase/firestore';
 
 const Container = styled.ScrollView`
 	flex: 1;
@@ -65,7 +65,7 @@ function Dashboard () {
 
   const getAllPosts = async () => {
     const collectionRef = collection(db, 'posts');
-    const q = query(collectionRef)
+    const q = query(collectionRef, orderBy('createdAt', 'desc'));
 
     const unsuscribe = onSnapshot(q, querySnapshot => {
       // querySnapshot.docs.map(item => console.log(item.data().postedBy))

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import ImageCarousel from '../components/GalleryPost';
 import PostedBy from '../components/PostedBy';
@@ -41,15 +41,10 @@ const PostDescription = styled.Text`
   marginBottom: 10px
 `;
 
+
+
 function PostDetailScreen ({ route, navigation }) {
   const detail = route.params;
-  console.log('route ', route.params)
-  const images = [
-    'https://img.freepik.com/foto-gratis/hermoso-camino-madera-que-impresionantes-arboles-coloridos-bosque_181624-5840.jpg?w=1380&t=st=1694710282~exp=1694710882~hmac=bfde8b97a543726166c6789a9300601781a0db35a4621bfca62b7c885be70358',
-    'https://w0.peakpx.com/wallpaper/224/496/HD-wallpaper-mountain-full-paisaje.jpg',
-    'https://w0.peakpx.com/wallpaper/224/496/HD-wallpaper-mountain-full-paisaje.jpg',
-    // Agrega más URL de imágenes según sea necesario
-  ];
 
   return (
     <Container>
