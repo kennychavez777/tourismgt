@@ -33,6 +33,9 @@ const UserPostsContainer = styled.View`
   flex-wrap: wrap;
   row-gap: 20px;
   column-gap: 20px;
+  borderTopWidth: 2px;
+  borderColor: lightgrey;
+  paddingTop: 15px;
 `;
 
 const PostContainer = styled.TouchableOpacity`

@@ -72,26 +72,29 @@ const FollowButton = styled.TouchableOpacity`
 `;
 
 const EditButton = styled.TouchableOpacity`
-	alignSelf: center;
-	width: 100%;
-  background-color: grey; /* Color de fondo del botón */
+  flex-direction: row;
+	alignItems: center;
+  background-color: #7a7d7f; /* Color de fondo del botón */
   padding: 7px 30px;
   border-radius: 5px;
 `;
-
+// seguido #b9babb
 const ButtonText = styled.Text`
-  color: #FFFFFF; /* Color del texto del botón */
+  color: #FFFFFF; 
+  font-weight: bold;
   font-size: 16px;
   text-align: center;
+  marginLeft: 7px;
 `;
 
 
 function ProfileData({ user, totalLikes, totalPosts, isMyProfile}) {
   const navigation = useNavigation();
+  console.log('user ', user);
   
   return (
     <Container>
-      <Picture source={{ uri: 'https://yt3.googleusercontent.com/ytc/AOPolaTqtKeqkDGtMCiXSyCnLcYRMGggZIz9L-Gpt5i4CA=s900-c-k-c0x00ffffff-no-rj' }} />
+      <Picture source={{ uri: user.profile_pic }} />
       <UserInfoContainer>
         <NameText>@{user.userName}</NameText>
         {/* <UserNameText>@melirodriguez</UserNameText> */}
@@ -103,7 +106,8 @@ function ProfileData({ user, totalLikes, totalPosts, isMyProfile}) {
           {
             isMyProfile ?
             <EditButton onPress={() => navigation.navigate('Editar Perfil', user)}>
-              <ButtonText><FontAwesomeIcon icon={faGear} color="#FFFFFF" size={20} /> Editar Perfil</ButtonText>
+              <FontAwesomeIcon icon={faGear} color="#FFFFFF" size={16} />
+              <ButtonText>Editar Perfil</ButtonText>
             </EditButton>
             :
             <FollowButton onPress={() => navigation.navigate('Editar Perfil', user)}>

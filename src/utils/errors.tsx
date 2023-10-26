@@ -1,4 +1,4 @@
-import { Alert } from 'react-native';
+import { Alert, ToastAndroid } from 'react-native';
 
 export const messages = {
   'auth/claims-too-large': 'Tamaño excesivo. (Mayor a 1000 bytes).',
@@ -36,3 +36,7 @@ export const showError = (title: string, msg: string) => {
     }
   ])
 }
+
+export const showToast = (msg: string) => {
+  ToastAndroid.show(msg, ToastAndroid.SHORT);
+};
