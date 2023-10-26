@@ -22,12 +22,13 @@ const ActionItemContainer = styled.Text`
 
 function ActionsButtons ({likes, comments, data}) {
   let total_comments = Array.from(comments).length;
+  let total_likes = Array.from(likes).length;
   const navigation = useNavigation();
 
   return (
     <ActionButtonsContainer onPress={() => navigation.navigate('Detalle de Post', data)}>
       <ActionItemContainer>
-        <FontAwesomeIcon icon={faHeart} size={25} color='grey' style={{ paddingTop: 10 }} /> {likes}
+        <FontAwesomeIcon icon={faHeart} size={25} color='grey' style={{ paddingTop: 10 }} /> {total_likes}
       </ActionItemContainer>
       <ActionItemContainer>
         <FontAwesomeIcon icon={faComment} size={25} color='grey' /> {total_comments}
