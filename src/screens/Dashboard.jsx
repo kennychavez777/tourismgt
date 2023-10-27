@@ -7,6 +7,7 @@ import { FIRESTORE as db } from '../firebase/config';
 import { collection, query, onSnapshot, orderBy } from 'firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import { useSession } from '../hooks/useSession';
+import { DEFAULT_PROFILE_PIC } from '../utils/utilities';
 
 const Container = styled.ScrollView`
 	flex: 1;
@@ -91,12 +92,18 @@ function Dashboard () {
 
   const setPictures = async() => {
     // setPosts([]);
-    // posts.map(async (p) => {
-    //   const email = p.postedBy.email;
-    //   const user = await getFullUser(email);
-    //   p.profile_pic = user.profile_pic;
-
-    // });
+    let data = await Promise.all(
+      posts.map(async (p) => {
+        const email = p.postedBy.email;
+        const user = await getFullUser(email);
+        p.profile_pic = user.profile_pic;
+        
+        return p;
+      })
+    );
+    
+    setPosts(data);
+    console.log('\n\ndata', posts);
     
     // const user = await getFullUser(email);
   }
@@ -108,7 +115,7 @@ function Dashboard () {
           .map((item, index) => (
             <Post key={index}>
               <HeaderPostContainer>
-                <Avatar imageSource={{uri: 'https://firebasestorage.googleapis.com/v0/b/tourism-gt.appspot.com/o/default%2Fuser-icon.jpg?alt=media&token=230702d9-c172-49ba-a410-037fdd019c7e&_gl=1*1gfvdzj*_ga*MTY5NzE4OTkyLjE2OTcwMDEyMTg.*_ga_CW55HF8NVT*MTY5ODIxNjY5Mi4zMi4xLjE2OTgyMTczNjUuNTUuMC4w'}} />
+                <Avatar imageSource={{uri: item.profile_pic ? item.profile_pic : DEFAULT_PROFILE_PIC }} />
                 <UserContainer onPress={() => navigation.navigate('Perfil de', { userId: item.postedBy.id })}>
                   <UserNameText>@{item.postedBy.userName}</UserNameText>
                   <PlaceText>{item.location}</PlaceText>

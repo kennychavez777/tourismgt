@@ -37,3 +37,5 @@ export const getPostedTime = (dateTimePost: string): string => {
     return `Hace ${secs} segundo(s)`;
   }
 }
+
+export const DEFAULT_PROFILE_PIC = 'https://firebasestorage.googleapis.com/v0/b/tourism-gt.appspot.com/o/default%2Fuser-icon.jpg?alt=media&token=230702d9-c172-49ba-a410-037fdd019c7e&_gl=1*fkovs6*_ga*MTY5NzE4OTkyLjE2OTcwMDEyMTg.*_ga_CW55HF8NVT*MTY5ODQxOTEwMS41Ni4xLjE2OTg0MjAwNDEuNTMuMC4w';
