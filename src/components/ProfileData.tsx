@@ -87,10 +87,8 @@ const ButtonText = styled.Text`
   marginLeft: 7px;
 `;
 
-
 function ProfileData({ user, totalLikes, totalPosts, isMyProfile}) {
   const navigation = useNavigation();
-  console.log('user ', user);
   
   return (
     <Container>

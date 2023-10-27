@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, Text, View } from 'react-native';
 import styled from 'styled-components';
 import Avatar from '../components/ProfilePic';
 import ImageCarousel from '../components/GalleryPost';
@@ -7,6 +6,7 @@ import ActionsButtons from '../components/ActionsButtons';
 import { FIRESTORE as db } from '../firebase/config';
 import { collection, query, onSnapshot, orderBy } from 'firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
+import { useSession } from '../hooks/useSession';
 
 const Container = styled.ScrollView`
 	flex: 1;
@@ -50,7 +50,7 @@ const GalleryContainer = styled.View`
 `;
 
 const PostTitle = styled.Text`
-  fontSize: 25px;
+  fontSize: 21px;
   fontWeight: 900;
   color: black;
   marginLeft: 10px;
@@ -60,6 +60,7 @@ const PostTitle = styled.Text`
 function Dashboard () {
   const [ posts, setPosts ] = useState([]);
   const navigation = useNavigation();
+  const { getFullUser } = useSession();
 
   useEffect(() => {
     getAllPosts();
@@ -70,7 +71,6 @@ function Dashboard () {
     const q = query(collectionRef, orderBy('createdAt', 'desc'));
 
     const unsuscribe = onSnapshot(q, querySnapshot => {
-      // querySnapshot.docs.map(item => console.log(item.data().postedBy))
       setPosts(
         querySnapshot.docs.map(item => ({
           id: item.id,
@@ -83,9 +83,22 @@ function Dashboard () {
           comments: item.data().comments,
         }))
       )
-
+      
+      setPictures()
       return unsuscribe;
     });
+  }
+
+  const setPictures = async() => {
+    // setPosts([]);
+    // posts.map(async (p) => {
+    //   const email = p.postedBy.email;
+    //   const user = await getFullUser(email);
+    //   p.profile_pic = user.profile_pic;
+
+    // });
+    
+    // const user = await getFullUser(email);
   }
 
   return (

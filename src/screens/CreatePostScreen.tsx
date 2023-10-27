@@ -37,6 +37,8 @@ const Input = styled.TextInput`
   borderColor: grey;
   borderRadius: 15px;
   marginBottom: 15px;
+  paddingLeft: 15px;
+  paddingRight: 15px;
 `;
 
 const Button = styled.TouchableOpacity`
@@ -76,9 +78,10 @@ function CreatePostScreen () {
         email: session.email,
         profile_pic: session.profile_pic,
       },
-      likes: 0,
+      likes: [],
       comments: [],
     }
+    console.log('post ', post);
     // save in db
     const firestore_response = await addDoc(collection(db, 'posts'), post);
     const id = firestore_response._key.path.segments[1];
@@ -148,7 +151,9 @@ function CreatePostScreen () {
         />
         <LabelInput>Descripción</LabelInput>
         <Input
-          multiline numberOfLines={4} 
+          multiline={true}
+          numberOfLines={4}
+          textAlignVertical="top"
           maxLength={500}
           value={description}
           onChangeText={(text: string) => setDescription(text)}
