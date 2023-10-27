@@ -4,7 +4,7 @@ import Avatar from '../components/ProfilePic';
 import ImageCarousel from '../components/GalleryPost';
 import ActionsButtons from '../components/ActionsButtons';
 import { FIRESTORE as db } from '../firebase/config';
-import { collection, query, onSnapshot, orderBy } from 'firebase/firestore';
+import { collection, query, onSnapshot, orderBy, getDocs } from 'firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import { useSession } from '../hooks/useSession';
 import { DEFAULT_PROFILE_PIC } from '../utils/utilities';
@@ -68,44 +68,38 @@ function Dashboard () {
   }, []);
 
   const getAllPosts = async () => {
-    const collectionRef = collection(db, 'posts');
-    const q = query(collectionRef, orderBy('createdAt', 'desc'));
+    const q = query(collection(db, 'posts'), orderBy('createdAt', 'desc')); 
+    const snapshot = await getDocs(q);
 
-    const unsuscribe = onSnapshot(q, querySnapshot => {
-      setPosts(
-        querySnapshot.docs.map(item => ({
-          id: item.id,
-          title: item.data().title,
-          description: item.data().description,
-          location: item.data().location,
-          selectedImages: item.data().selectedImages,
-          postedBy: item.data().postedBy,
-          likes: item.data().likes,
-          comments: item.data().comments,
-        }))
-      )
+    snapshot.forEach(async (item) => {
+      let p = item.data();
+      p.id = item.id;
+
+      const email = p.postedBy.email;
+      const user = await getFullUser(email);
+      p.profile_pic = user.profile_pic;
       
-      setPictures()
-      return unsuscribe;
+      setPosts(prev => ([
+        ...prev, p
+      ]));
     });
   }
 
   const setPictures = async() => {
-    // setPosts([]);
-    let data = await Promise.all(
-      posts.map(async (p) => {
-        const email = p.postedBy.email;
-        const user = await getFullUser(email);
-        p.profile_pic = user.profile_pic;
-        
-        return p;
-      })
-    );
-    
-    setPosts(data);
-    console.log('\n\ndata', posts);
-    
-    // const user = await getFullUser(email);
+    if (posts.length > 0) {
+      let data = await Promise.all(
+        posts.map(async (p) => {
+          const email = p.postedBy.email;
+          const user = await getFullUser(email);
+          p.profile_pic = user.profile_pic;
+          
+          return p;
+        })
+      );
+      
+      setPosts(data);
+    }
+
   }
 
   return (

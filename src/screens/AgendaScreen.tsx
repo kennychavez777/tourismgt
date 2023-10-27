@@ -41,7 +41,7 @@ const AgendaScreen = () => {
         newItemsData[key] = newItems[key];
       });
       setItems(newItemsData);
-    }, 1000);
+    }, 100);
   };
 
   const timeToString = (time: number) => {
