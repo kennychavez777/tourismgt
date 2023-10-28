@@ -27,7 +27,7 @@ export function useSession () {
       user = item.data();
       user.id = item.id;
     });
-
+    console.log(' user ', user);
     return user;
   }
 
@@ -38,6 +38,7 @@ export function useSession () {
     
     if (snapshot.exists()) {
       user = snapshot.data();
+      user.id = snapshot.id;
     }
 
     return user;

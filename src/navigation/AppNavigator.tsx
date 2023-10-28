@@ -111,7 +111,7 @@ function StackGroup() {
 			}
 			
 			<Stack.Group screenOptions={{ presentation: 'modal' }}>
-				<Stack.Screen name="AddFriendsModal" component={AddFriendsModal} />
+				<Stack.Screen name="Invitar Amigos" component={AddFriendsModal} />
 			</Stack.Group>
 		</Stack.Navigator>
 	)

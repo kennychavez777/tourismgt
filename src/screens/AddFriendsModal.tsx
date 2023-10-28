@@ -1,7 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
+import { useSession } from '../hooks/useSession';
+
+import { FIRESTORE as db } from '../firebase/config';
+import { doc, getDoc } from 'firebase/firestore';
 
 const AddFriendsModalContainer = styled.ScrollView`
   flex: 1;
@@ -48,25 +52,69 @@ const ButtonText = styled.Text`
   font-weight: 600;
 `;
 
-const AddFriendsModal = () => {
-  const [selectedContacts, setSelectedContacts] = useState([]);
-  const navigation = useNavigation()
+const MessageText = styled.Text`
+  width: 100%;
+  textAlign: center;
+  fontSize: 15px;
+  fontWeight: bold;
+  marginTop: 15px;
+`;
 
-  const toggleContactSelection = (contactId) => {
-    if (selectedContacts.includes(contactId)) {
-      setSelectedContacts(selectedContacts.filter((id) => id !== contactId));
-    } else {
-      setSelectedContacts([...selectedContacts, contactId]);
+const AddFriendsModal = ({route, navigation}) => {
+  const { getUserById, session } = useSession();
+
+  const [contacts, setContacts] = useState([]);
+  const [guests, setGuests] = useState([]);
+
+  useEffect(() => {
+    getFriends();
+
+  }, [])
+
+  const getFriends = async () => {
+    const snapshot = await getDoc(doc(db, 'users', session.id));
+
+    if (snapshot.exists()) {
+      const followed = snapshot.data().followed;
+      const friends = await Promise.all(
+        followed.map(async(userId) => {
+          let user = await getUserById(userId);
+
+          return {
+            id: user.id,
+            userName: user.userName,
+            profile_pic: user.profile_pic,
+            selected: false,
+          };
+        }
+      ));
+
+      setContacts(friends);
     }
-  };
+  }
 
-  const contacts = [
-    { id: 1, name: 'Maria Gonzalez', image: 'https://yt3.googleusercontent.com/ytc/AOPolaTqtKeqkDGtMCiXSyCnLcYRMGggZIz9L-Gpt5i4CA=s900-c-k-c0x00ffffff-no-rj' },
-    { id: 2, name: 'Rocio Fernandez', image: 'https://yt3.googleusercontent.com/ytc/AOPolaTqtKeqkDGtMCiXSyCnLcYRMGggZIz9L-Gpt5i4CA=s900-c-k-c0x00ffffff-no-rj' },
-    { id: 3, name: 'Miguel Cosio', image: 'https://yt3.googleusercontent.com/ytc/AOPolaTqtKeqkDGtMCiXSyCnLcYRMGggZIz9L-Gpt5i4CA=s900-c-k-c0x00ffffff-no-rj' },
-    { id: 4, name: 'Humberto Rodriguez', image: 'https://yt3.googleusercontent.com/ytc/AOPolaTqtKeqkDGtMCiXSyCnLcYRMGggZIz9L-Gpt5i4CA=s900-c-k-c0x00ffffff-no-rj' },
-    { id: 5, name: 'Jenn Hernandez', image: 'https://yt3.googleusercontent.com/ytc/AOPolaTqtKeqkDGtMCiXSyCnLcYRMGggZIz9L-Gpt5i4CA=s900-c-k-c0x00ffffff-no-rj' },
-  ];
+  const toggleContactSelection = (contact) => {
+    let c = contacts.map((item) => {
+      if (item.id === contact.id) {
+        item.selected = !item.selected;
+      }
+
+      return item;
+    });
+
+    setContacts(c);
+
+    let g = [];
+
+    c.forEach(item => {
+      if (item.selected) {
+        g.push(item);
+      }
+    })
+
+    setGuests(g);
+    route.params.closeModal(g);
+  };
 
   const goBack = () => {
     navigation.goBack();
@@ -74,46 +122,56 @@ const AddFriendsModal = () => {
 
   return (
     <AddFriendsModalContainer>
-      {contacts.map((contact) => (
-        <TouchableOpacity
-          key={contact.id}
-          onPress={() => toggleContactSelection(contact.id)}
-        >
-          <ContactItem>
-            <ContactImage source={{ uri: contact.image }} />
-            <ContactName>{contact.name}</ContactName>
-            <ToggleContainer>
-              <View
-                style={{
-                  width: 24,
-                  height: 24,
-                  borderWidth: 2,
-                  borderColor: selectedContacts.includes(contact.id)
-                    ? 'blue'
-                    : 'gray',
-                  borderRadius: 12,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                {selectedContacts.includes(contact.id) && (
+      {
+        contacts.length > 0 ?
+          contacts.map((contact) => (
+            <TouchableOpacity
+              key={contact.id}
+              onPress={() => toggleContactSelection(contact)}
+            >
+              <ContactItem>
+                <ContactImage source={{ uri: contact.profile_pic }} />
+                <ContactName>{contact.userName}</ContactName>
+                <ToggleContainer>
                   <View
                     style={{
-                      width: 12,
-                      height: 12,
-                      backgroundColor: 'blue',
-                      borderRadius: 6,
+                      width: 24,
+                      height: 24,
+                      borderWidth: 2,
+                      borderColor: contact.selected
+                        ? 'blue'
+                        : 'gray',
+                      borderRadius: 12,
+                      justifyContent: 'center',
+                      alignItems: 'center',
                     }}
-                  />
-                )}
-              </View>
-            </ToggleContainer>
-          </ContactItem>
-        </TouchableOpacity>
-      ))}
-      <Button onPress={goBack}>
-        <ButtonText>Guardar</ButtonText>
-      </Button>
+                  >
+                    {contact.selected && (
+                      <View
+                        style={{
+                          width: 12,
+                          height: 12,
+                          backgroundColor: 'blue',
+                          borderRadius: 6,
+                        }}
+                      />
+                    )}
+                  </View>
+                </ToggleContainer>
+              </ContactItem>
+            </TouchableOpacity>
+          ))
+        :
+        <MessageText>No hay usuarios para invitar</MessageText>
+      }
+      {
+        contacts.length > 0 ? 
+          <Button onPress={goBack}>
+            <ButtonText>Guardar</ButtonText>
+          </Button>
+        :
+        null
+      }
     </AddFriendsModalContainer>
   );
 };

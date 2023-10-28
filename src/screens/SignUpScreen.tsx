@@ -85,7 +85,9 @@ function SignUpScreen() {
 					updatedAt: getCurrentDateAndTime(),
 					profile_pic: 'https://firebasestorage.googleapis.com/v0/b/tourism-gt.appspot.com/o/default%2Fuser-icon.jpg?alt=media&token=230702d9-c172-49ba-a410-037fdd019c7e&_gl=1*144mhhn*_ga*MTY5NzE4OTkyLjE2OTcwMDEyMTg.*_ga_CW55HF8NVT*MTY5ODIxMDM3MC4zMS4xLjE2OTgyMTA0ODkuMTIuMC4w',
 					total_likes: 0,
-					total_posts: 0
+					total_posts: 0,
+					followers: [],
+					followed: []
 				}
 
 				await addDoc(collection(db, 'users'), newUser);
@@ -97,7 +99,9 @@ function SignUpScreen() {
 					accessToken: user.accessToken,
 					profile_pic: 'https://firebasestorage.googleapis.com/v0/b/tourism-gt.appspot.com/o/default%2Fuser-icon.jpg?alt=media&token=230702d9-c172-49ba-a410-037fdd019c7e&_gl=1*144mhhn*_ga*MTY5NzE4OTkyLjE2OTcwMDEyMTg.*_ga_CW55HF8NVT*MTY5ODIxMDM3MC4zMS4xLjE2OTgyMTA0ODkuMTIuMC4w',
 					total_likes: 0,
-					total_posts: 0
+					total_posts: 0,
+					followers: [],
+					followed: []
 				});
 			} else {
 				showError('Error', 'Las contraseñas no son iguales.')

@@ -111,14 +111,13 @@ function SearchScreen () {
     const lowerSearchText = search.toLowerCase();
 
     const filteredResult = posts.filter((post) => {
-		const title = post.title.toLowerCase();
-		const description = post.description.toLowerCase();
-		const location = post.location.toLowerCase();
+			const title = post.title.toLowerCase();
+			const description = post.description.toLowerCase();
+			const location = post.location.toLowerCase();
 
       return title.includes(lowerSearchText) || description.includes(lowerSearchText) || location.includes(lowerSearchText);
     });
 
-		console.log('filtered results', filteredResult);
     setPosts(filteredResult);
   };
 
@@ -127,7 +126,6 @@ function SearchScreen () {
 		
 		if (text === '') {
 			setPosts(fullData);
-			console.log('full data => ', fullData);
 		}
 	}
 

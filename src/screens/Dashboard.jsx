@@ -85,23 +85,6 @@ function Dashboard () {
     });
   }
 
-  const setPictures = async() => {
-    if (posts.length > 0) {
-      let data = await Promise.all(
-        posts.map(async (p) => {
-          const email = p.postedBy.email;
-          const user = await getFullUser(email);
-          p.profile_pic = user.profile_pic;
-          
-          return p;
-        })
-      );
-      
-      setPosts(data);
-    }
-
-  }
-
   return (
     <Container>
       {

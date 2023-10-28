@@ -4,6 +4,7 @@ import styled from 'styled-components';
 // Icons
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
+
 import { useNavigation } from '@react-navigation/native';
 
 const Container = styled.View`
