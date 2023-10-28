@@ -110,7 +110,7 @@ function ProfileData({ user, totalLikes, totalPosts, isMyProfile}) {
             </EditButton>
             :
             <FollowButton onPress={() => navigation.navigate('Editar Perfil', user)}>
-              <ButtonText>Editar</ButtonText>
+              <ButtonText>Seguir</ButtonText>
             </FollowButton>
           }
           

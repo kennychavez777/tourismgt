@@ -6,7 +6,7 @@ import { useSession } from '../hooks/useSession';
 
 import { FIRESTORE as db } from '../firebase/config';
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 
 const images = [
   'https://img.freepik.com/foto-gratis/hermoso-camino-madera-que-impresionantes-arboles-coloridos-bosque_181624-5840.jpg?w=1380&t=st=1694710282~exp=1694710882~hmac=bfde8b97a543726166c6789a9300601781a0db35a4621bfca62b7c885be70358',
@@ -73,18 +73,22 @@ function ProfileScreen ({ route, navigation }) {
   const [ posts, setPosts ] = useState([]);
   const [ totalLikes, setTotalLikes ] = useState(0);
 
+  const isFocused = useIsFocused();
+
   useEffect(() => {
     getUser();
+    if (isFocused) {
+      getUser();
+    }
   }, []);
 
   const getUser = async() => {
     let userId;
+    setIsMyProfile(false);
     if (route && route.params) {
       userId = route.params.userId;
-      console.log('si hay params user ', userId)
     } else {
       userId = session.id;
-      console.log('Nel params ', userId)
     }
 
     if (userId === session.id) {
