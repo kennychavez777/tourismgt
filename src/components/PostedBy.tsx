@@ -63,11 +63,6 @@ const PostedBy = ({by}) => {
           <PostedByLabel>Publicado por</PostedByLabel>
           <UserNameLabel>@{by.userName}</UserNameLabel>
         </DataContainer>
-        <LikeContainer>
-          <ActionItemContainer>
-            <FontAwesomeIcon icon={faHeart} size={30} color='red' style={{ paddingTop: 10 }} />
-          </ActionItemContainer>
-        </LikeContainer>
       </UsernameContainer>
     </Container>
   );
