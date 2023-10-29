@@ -62,7 +62,6 @@ function CreatePostScreen () {
   const [ description, setDescription ] =  useState('');
   const [ location, setLocation ] =  useState('');
   const [ selectedImages, setSelectedImages ] = useState([]);
-  const [ uploadedImages, setUploadedImages ] = useState<String []>([]);
   const [ loading, setLoading ] = useState(false);
   const navigation = useNavigation();
   const { session } = useSession();
@@ -85,16 +84,24 @@ function CreatePostScreen () {
     // save in db
     const firestore_response = await addDoc(collection(db, 'posts'), post);
     const id = firestore_response._key.path.segments[1];
-    setUploadedImages([]);
-    selectedImages.map((item, i) => {
-      uploadImage(item['uri'], id)
+
+    let promises = selectedImages.map((item, i) => {
+      return uploadImage(item['uri'], id)
     });
 
-    setTimeout(() => {
-      navigation.navigate('Inicio');
-      cleanForm();
-    }, 1500)
-    setLoading(false);
+    Promise.all(promises)
+      .then(results => {
+        console.log('results ', results)
+        const docRef = doc(db, 'posts', id);
+        const data = {
+          selectedImages: results,
+        }
+        updateDoc(docRef, data);
+
+        cleanForm();
+        setLoading(false);
+        navigation.navigate('Inicio');
+      });
   }
 
   const cleanForm = () => {
@@ -102,7 +109,6 @@ function CreatePostScreen () {
     setDescription('');
     setLocation('');
     setSelectedImages([]);
-    setUploadedImages([]);
   }
 
   const uploadImage = async(uri: string, id: string) => {
@@ -110,35 +116,10 @@ function CreatePostScreen () {
     const blob = await response.blob();
 
     const storageRef = ref(st, `posts/${id}/` + new Date().getTime())
-    const uploadTask = uploadBytesResumable(storageRef, blob);
+    const uploadTask = await uploadBytesResumable(storageRef, blob);
+    const url = await getDownloadURL(uploadTask.ref);
 
-    // listen for events
-    uploadTask.on('state_changed',
-      (snapshot) => {
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log('progress ', progress);
-      },
-      (error) => {
-        // handle error
-        console.log('Storage Error in CreatePostScreen ', error);
-        showError('Error', messages[error['code']]);
-      },
-      () => {
-        // complete
-        getDownloadURL(uploadTask.snapshot.ref).then(async(url) => {
-          setUploadedImages(current => [
-            ...current, url
-          ])
-          // creating the references
-          const docRef = doc(db, 'posts', id);
-          const data = {
-            selectedImages: uploadedImages,
-          }
-          console.log('images ', uploadedImages, selectedImages)
-          updateDoc(docRef, data);
-        })
-      }
-    )
+    return url;
   }
 
   return (

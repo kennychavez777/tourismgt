@@ -89,7 +89,7 @@ const AgendaScreen = () => {
     const newItems = {};
     
     setTimeout(() => {
-      for (let i = -5; i < 7; i++) {
+      for (let i = -5; i < 30; i++) {
         const time = day.timestamp + i * 24 * 60 * 60 * 1000;
         const strTime = timeToString(time);
         

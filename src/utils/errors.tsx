@@ -24,7 +24,8 @@ export const messages = {
   'img/error-selection': 'Hubo un error al seleccionar la imagen.',
   'storage/object-not-found': 'No se encontró el archivo correspondiente.',
   'storage/unauthorized': 'El usuario no tiene permisos para acceder al objeto.',
-  'storage/canceled': 'Se canceló la subida de la imagen.'
+  'storage/canceled': 'Se canceló la subida de la imagen.',
+  'auth/weak-password': 'La contraseña debe de ser de al menos 6 caracteres.'
 }
 
 export const showError = (title: string, msg: string) => {

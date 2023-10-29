@@ -27,7 +27,7 @@ export function useSession () {
       user = item.data();
       user.id = item.id;
     });
-    console.log(' user ', user);
+
     return user;
   }
 

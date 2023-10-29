@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
+import { RefreshControl } from 'react-native';
 import styled from 'styled-components';
 import Avatar from '../components/ProfilePic';
 import ImageCarousel from '../components/GalleryPost';
 import ActionsButtons from '../components/ActionsButtons';
-import { FIRESTORE as db } from '../firebase/config';
-import { collection, query, onSnapshot, orderBy, getDocs } from 'firebase/firestore';
-import { useNavigation } from '@react-navigation/native';
+import { FIRESTORE as db, STORAGE as st } from '../firebase/config';
+import { collection, query, orderBy, getDocs } from 'firebase/firestore';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { useSession } from '../hooks/useSession';
 import { DEFAULT_PROFILE_PIC } from '../utils/utilities';
+import { getDownloadURL, listAll, ref } from 'firebase/storage';
 
 const Container = styled.ScrollView`
 	flex: 1;
@@ -62,19 +64,33 @@ function Dashboard () {
   const [ posts, setPosts ] = useState([]);
   const navigation = useNavigation();
   const { getFullUser } = useSession();
+  const [refreshing, setRefreshing] = React.useState(false);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    getAllPosts();
+    if (isFocused) {
+      getAllPosts();
+    }
+  }, []);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      getAllPosts();
+      setRefreshing(false);
+    }, 100);
   }, []);
 
   const getAllPosts = async () => {
+    setPosts([]);
+
     const q = query(collection(db, 'posts'), orderBy('createdAt', 'desc')); 
     const snapshot = await getDocs(q);
 
     snapshot.forEach(async (item) => {
       let p = item.data();
       p.id = item.id;
-
+      
       const email = p.postedBy.email;
       const user = await getFullUser(email);
       p.profile_pic = user.profile_pic;
@@ -86,7 +102,11 @@ function Dashboard () {
   }
 
   return (
-    <Container>
+    <Container
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       {
         posts
           .map((item, index) => (

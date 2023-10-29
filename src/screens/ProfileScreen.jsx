@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Image, Text } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { RefreshControl } from 'react-native';
 import styled from 'styled-components';
 import ProfileData from '../components/ProfileData';
 import { useSession } from '../hooks/useSession';
@@ -7,13 +7,6 @@ import { useSession } from '../hooks/useSession';
 import { FIRESTORE as db } from '../firebase/config';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
-
-const images = [
-  'https://img.freepik.com/foto-gratis/hermoso-camino-madera-que-impresionantes-arboles-coloridos-bosque_181624-5840.jpg?w=1380&t=st=1694710282~exp=1694710882~hmac=bfde8b97a543726166c6789a9300601781a0db35a4621bfca62b7c885be70358',
-  'https://w0.peakpx.com/wallpaper/224/496/HD-wallpaper-mountain-full-paisaje.jpg',
-  'https://w0.peakpx.com/wallpaper/224/496/HD-wallpaper-mountain-full-paisaje.jpg',
-  // Agrega más URL de imágenes según sea necesario
-];
 
 const Container = styled.ScrollView`
 	flex: 1;
@@ -72,11 +65,11 @@ function ProfileScreen ({ route, navigation }) {
   const [ user, setUser ] = useState({});
   const [ posts, setPosts ] = useState([]);
   const [ totalLikes, setTotalLikes ] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
 
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    getUser();
     if (isFocused) {
       getUser();
     }
@@ -84,6 +77,7 @@ function ProfileScreen ({ route, navigation }) {
 
   const getUser = async() => {
     let userId;
+    setPosts([]);
     setIsMyProfile(false);
     if (route && route.params) {
       userId = route.params.userId;
@@ -120,9 +114,20 @@ function ProfileScreen ({ route, navigation }) {
     setTotalLikes(tlikes);
   }
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      getUser();
+      setRefreshing(false);
+    }, 100);
+  }, []);
 
   return (
-    <Container>
+    <Container
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <ProfileData user={user} totalLikes={totalLikes} totalPosts={posts.length} isMyProfile={isMyProfile} />
       <UserPostsContainer>
         {
