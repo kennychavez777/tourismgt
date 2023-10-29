@@ -71,46 +71,52 @@ function SignUpScreen() {
 	const [ loading, setLoading ] = useState(false);
 	const auth = FIREBASE_AUTH;
 	const navigation = useNavigation();
-	const { saveUser, session } = useSession();
+	const { saveUser, getFullUser } = useSession();
 
 	const createUser = async () => {
 		setLoading(true);
-
-		try {
-			if (password === confirmPassword) {
-				const response = await createUserWithEmailAndPassword(auth, email, password);
-				const newUser = {
-					email, userName, 
-					createdAt: getCurrentDateAndTime(),
-					updatedAt: getCurrentDateAndTime(),
-					profile_pic: 'https://firebasestorage.googleapis.com/v0/b/tourism-gt.appspot.com/o/default%2Fuser-icon.jpg?alt=media&token=230702d9-c172-49ba-a410-037fdd019c7e&_gl=1*144mhhn*_ga*MTY5NzE4OTkyLjE2OTcwMDEyMTg.*_ga_CW55HF8NVT*MTY5ODIxMDM3MC4zMS4xLjE2OTgyMTA0ODkuMTIuMC4w',
-					total_likes: 0,
-					total_posts: 0,
-					followers: [],
-					followed: []
-				}
-
-				await addDoc(collection(db, 'users'), newUser);
-
-				const { user } = response;
-				saveUser({
-					displayName: userName,
-					email: user.email,
-					accessToken: user.accessToken,
-					profile_pic: 'https://firebasestorage.googleapis.com/v0/b/tourism-gt.appspot.com/o/default%2Fuser-icon.jpg?alt=media&token=230702d9-c172-49ba-a410-037fdd019c7e&_gl=1*144mhhn*_ga*MTY5NzE4OTkyLjE2OTcwMDEyMTg.*_ga_CW55HF8NVT*MTY5ODIxMDM3MC4zMS4xLjE2OTgyMTA0ODkuMTIuMC4w',
-					total_likes: 0,
-					total_posts: 0,
-					followers: [],
-					followed: []
-				});
-			} else {
-				showError('Error', 'Las contraseñas no son iguales.')
-			}
-		} catch( error ) {
-			console.log('error', error)
-			showError('Error', messages[error['code']]);
-		} finally {
+		if (email === '' || userName === '' || password === '' || confirmPassword === '') {
+			showError('Error', 'Por favor llena todos los campos.')
 			setLoading(false);
+		} else {
+			try {
+				if (password === confirmPassword) {
+					const response = await createUserWithEmailAndPassword(auth, email, password);
+					const newUser = {
+						email, userName, 
+						createdAt: getCurrentDateAndTime(),
+						updatedAt: getCurrentDateAndTime(),
+						profile_pic: 'https://firebasestorage.googleapis.com/v0/b/tourism-gt.appspot.com/o/default%2Fuser-icon.jpg?alt=media&token=230702d9-c172-49ba-a410-037fdd019c7e&_gl=1*144mhhn*_ga*MTY5NzE4OTkyLjE2OTcwMDEyMTg.*_ga_CW55HF8NVT*MTY5ODIxMDM3MC4zMS4xLjE2OTgyMTA0ODkuMTIuMC4w',
+						total_likes: 0,
+						total_posts: 0,
+						followers: [],
+						followed: []
+					}
+	
+					await addDoc(collection(db, 'users'), newUser);
+	
+					const { user } = response;
+					const userFromDB = await getFullUser(email);
+					saveUser(userFromDB);
+					// saveUser({
+					// 	displayName: userName,
+					// 	email: user.email,
+					// 	accessToken: user.accessToken,
+					// 	profile_pic: 'https://firebasestorage.googleapis.com/v0/b/tourism-gt.appspot.com/o/default%2Fuser-icon.jpg?alt=media&token=230702d9-c172-49ba-a410-037fdd019c7e&_gl=1*144mhhn*_ga*MTY5NzE4OTkyLjE2OTcwMDEyMTg.*_ga_CW55HF8NVT*MTY5ODIxMDM3MC4zMS4xLjE2OTgyMTA0ODkuMTIuMC4w',
+					// 	total_likes: 0,
+					// 	total_posts: 0,
+					// 	followers: [],
+					// 	followed: []
+					// });
+				} else {
+					showError('Error', 'Las contraseñas no son iguales.')
+				}
+			} catch( error ) {
+				console.log('error', error)
+				showError('Error', messages[error['code']]);
+			} finally {
+				setLoading(false);
+			}
 		}
 	}
 

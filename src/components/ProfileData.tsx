@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 // Icons
@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
 
 import { useNavigation } from '@react-navigation/native';
+import { useSession } from '../hooks/useSession';
+import { useActionsButtons } from '../hooks/useActionsButtons';
 
 const Container = styled.View`
   flex-direction: row;
@@ -68,7 +70,15 @@ const FollowButton = styled.TouchableOpacity`
 	alignSelf: center;
 	width: 100%;
   background-color: #01c8fb; /* Color de fondo del botón */
-  padding: 10px 30px;
+  padding: 7px 30px;
+  border-radius: 5px;
+`;
+
+const FollowedButton = styled.TouchableOpacity`
+	alignSelf: center;
+	width: 100%;
+  background-color: #5db9d1; /* Color de fondo del botón */
+  padding: 7px 30px;
   border-radius: 5px;
 `;
 
@@ -90,6 +100,43 @@ const ButtonText = styled.Text`
 
 function ProfileData({ user, totalLikes, totalPosts, isMyProfile}) {
   const navigation = useNavigation();
+  const { session, getUserById } = useSession();
+  const { updateFollowers } = useActionsButtons();
+
+  const [ allFollowers, setAllFollowers ] = useState([]);
+  const [ isFollowing, setIsFollowing ] = useState(false);
+
+  useEffect(() => {
+    setParams();
+  }, [user])
+
+  const setParams = async() => {
+    if (user && user.id) {
+      const f = await getUserById(user.id);
+      const isThere = f.followers.includes(session.id);
+      
+      if (isThere) {
+        setIsFollowing(isThere);
+      }
+
+      setAllFollowers(f.followers);
+    }
+  }
+
+  const handleFollow = () => {
+    let newFollowers = [...allFollowers];
+    const isThere = newFollowers.includes(session.id);
+
+    if (isThere) {
+      newFollowers.splice(newFollowers.indexOf(session.id), 1);
+    } else {
+      newFollowers.push(session.id);
+    }
+
+    updateFollowers(newFollowers, user.id);
+    setAllFollowers(newFollowers);
+    setIsFollowing(!isThere);
+  }
   
   return (
     <Container>
@@ -104,14 +151,19 @@ function ProfileData({ user, totalLikes, totalPosts, isMyProfile}) {
         <ConfigContainer>
           {
             isMyProfile ?
-            <EditButton onPress={() => navigation.navigate('Editar Perfil', user)}>
-              <FontAwesomeIcon icon={faGear} color="#FFFFFF" size={16} />
-              <ButtonText>Editar Perfil</ButtonText>
-            </EditButton>
+              <EditButton onPress={() => navigation.navigate('Editar Perfil', user)}>
+                <FontAwesomeIcon icon={faGear} color="#FFFFFF" size={16} />
+                <ButtonText>Editar Perfil</ButtonText>
+              </EditButton>
             :
-            <FollowButton onPress={() => navigation.navigate('Editar Perfil', user)}>
-              <ButtonText>Seguir</ButtonText>
-            </FollowButton>
+              !isFollowing ?
+                <FollowButton onPress={handleFollow}>
+                  <ButtonText>Seguir</ButtonText>
+                </FollowButton>
+              :
+                <FollowedButton onPress={handleFollow}>
+                  <ButtonText>Dejar de seguir</ButtonText>
+                </FollowedButton>
           }
           
         </ConfigContainer>

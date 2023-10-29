@@ -44,13 +44,18 @@ function ActionsButtons ({likes, comments, data}) {
 
   const getPostLikes = async () => {
     const l = await getPost(data.id);
+    const isThere = l.likes.includes(session.id);
+
+    if (isThere) {
+      setIsLiked(isThere);
+    }
     
     setAllLikes(l.likes);
   }
 
   const handleLikes = () => {
     let newLikes = [...allLikes];
-    const isThere =newLikes.includes(session.id);
+    const isThere = newLikes.includes(session.id);
     if (isThere) {
       newLikes.splice(newLikes.indexOf(session.id), 1);
     } else {

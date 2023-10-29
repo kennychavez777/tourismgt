@@ -57,6 +57,13 @@ const PlaceTitlePost = styled.Text`
   textAlign: center;
 `;
 
+const NoPosts = styled.Text`
+  color: grey;
+  fontSize: 14px;
+  width: 100%;
+  textAlign: center;
+`;
+
 function ProfileScreen ({ route, navigation }) {
   const { session, getUserById } = useSession();
   const nav = useNavigation();
@@ -131,14 +138,16 @@ function ProfileScreen ({ route, navigation }) {
       <ProfileData user={user} totalLikes={totalLikes} totalPosts={posts.length} isMyProfile={isMyProfile} />
       <UserPostsContainer>
         {
-          posts
-            .map((item, index) => (
-              <PostContainer onPress={() => nav.navigate('Detalle de Post', item)} key={index}>
-                <ImagePost source={{ uri: item.selectedImages[0] }}></ImagePost>
-                <TitlePost>{ item.title }</TitlePost>
-                <PlaceTitlePost>{ item.location }</PlaceTitlePost>
-              </PostContainer>
-            ))
+          posts.length > 0 ? 
+            posts
+              .map((item, index) => (
+                <PostContainer onPress={() => nav.navigate('Detalle de Post', item)} key={index}>
+                  <ImagePost source={{ uri: item.selectedImages[0] }}></ImagePost>
+                  <TitlePost>{ item.title }</TitlePost>
+                  <PlaceTitlePost>{ item.location }</PlaceTitlePost>
+                </PostContainer>
+              ))
+          : <NoPosts>No hay publicaciones</NoPosts>
         }
       </UserPostsContainer>
     </Container>

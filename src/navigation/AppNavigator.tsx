@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 // Icons
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faHome, faMagnifyingGlass, faPlus, faCalendarDays, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faMagnifyingGlass, faPlus, faCalendarDays, faUser, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 
 // Screens
 import LoginScreen from '../screens/LoginScreen';
@@ -23,10 +23,20 @@ import AgendaScreen from '../screens/AgendaScreen';
 import AddFriendsModal from '../screens/AddFriendsModal';
 import { useSession } from '../hooks/useSession';
 
+import styled from 'styled-components';
+
+const EditButton = styled.TouchableOpacity`
+  flex-direction: row;
+	alignItems: center;
+  padding: 10px;
+  border-radius: 5px;
+`;
+
 // Tabs
 const Tab = createBottomTabNavigator();
 
 function BottomTabGroup() {
+	const { logout } = useSession();
 	return (
 		<Tab.Navigator
 			screenOptions={({ route }) => ({
@@ -51,7 +61,17 @@ function BottomTabGroup() {
 			})}
 		>
 			<Tab.Screen
-				name="Inicio" component={Dashboard} 
+				name="Inicio"
+				component={Dashboard} 
+				options={({ navigation, route }) => ({
+					// headerTitle: (props) => <Text>hello</Text>,
+					// Add a placeholder button without the `onPress` to avoid flicker
+					headerRight: () => (
+						<EditButton onPress={() => logout()}>
+							<FontAwesomeIcon icon={faArrowRightFromBracket} color="grey" size={24} />
+						</EditButton>
+					),
+				  })}
 			/>
 			<Tab.Screen
 				name="Buscar" component={SearchScreen}
@@ -85,8 +105,20 @@ function StackGroup() {
 			{
 				session.accessToken === '' ? (
 					<Stack.Group>
-						<Stack.Screen name="Login" component={LoginScreen} />
-						<Stack.Screen name="SignUp" component={SignUpScreen} />
+						<Stack.Screen
+							name="Login"
+							component={LoginScreen}
+							options={{
+								headerShown: false,
+							}}
+						/>
+						<Stack.Screen
+							name="SignUp"
+							component={SignUpScreen}
+							options={{
+								headerShown: false,
+							}}
+						/>
 					</Stack.Group>
 				) : (
 					<Stack.Group>

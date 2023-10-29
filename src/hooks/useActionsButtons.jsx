@@ -24,5 +24,12 @@ export function useActionsButtons () {
     });
   }
 
-  return { getPost, updateLikes };
+  const updateFollowers = (followers, userId) => {
+    const userRef = doc(db, 'users', userId);
+    updateDoc(userRef, {
+      followers: followers
+    })
+  }
+
+  return { getPost, updateLikes, updateFollowers };
 }
