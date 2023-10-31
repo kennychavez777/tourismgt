@@ -155,12 +155,16 @@ function EditProfileScreen({ route, navigation }) {
         setVerifyPassword('');
       }
       
-      const userId = session.id;
-      const userRef = doc(db, 'users', userId);
+      if (userName) {
+        const userId = session.id;
+        const userRef = doc(db, 'users', userId);
 
-      updateDoc(userRef, {
-        userName: userName
-      })
+        updateDoc(userRef, {
+          userName: userName
+        })
+      } else {
+        showError('El nombre de usuario no puede ir vacío.')
+      }
     } else {
       showError('Error', 'Las contraseñas no son iguales.');
     }

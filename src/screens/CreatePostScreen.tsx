@@ -67,41 +67,47 @@ function CreatePostScreen () {
   const { session } = useSession();
 
   const uploadPost = async() => {
-    setLoading(true);
-    const post = {
-      title, description, location, selectedImages: [],
-      createdAt: getCurrentDateAndTime(),
-      postedBy: {
-        id: session.id,
-        userName: session.userName,
-        email: session.email,
-        profile_pic: session.profile_pic,
-      },
-      likes: [],
-      comments: [],
-    }
-    console.log('post ', post);
-    // save in db
-    const firestore_response = await addDoc(collection(db, 'posts'), post);
-    const id = firestore_response._key.path.segments[1];
+    if (title.length === 0 || description.length === 0 || location.length === 0) {
+      showError('Error', 'Por favor llena todos los campos.')
+    } else if (selectedImages.length === 0) {
+      showError('Error', 'Por favor selecciona imágenes.')
+    } else {
+      setLoading(true);
+      const post = {
+        title, description, location, selectedImages: [],
+        createdAt: getCurrentDateAndTime(),
+        postedBy: {
+          id: session.id,
+          userName: session.userName,
+          email: session.email,
+          profile_pic: session.profile_pic,
+        },
+        likes: [],
+        comments: [],
+      }
+      console.log('post ', post);
+      // save in db
+      const firestore_response = await addDoc(collection(db, 'posts'), post);
+      const id = firestore_response._key.path.segments[1];
 
-    let promises = selectedImages.map((item, i) => {
-      return uploadImage(item['uri'], id)
-    });
-
-    Promise.all(promises)
-      .then(results => {
-        console.log('results ', results)
-        const docRef = doc(db, 'posts', id);
-        const data = {
-          selectedImages: results,
-        }
-        updateDoc(docRef, data);
-
-        cleanForm();
-        setLoading(false);
-        navigation.navigate('Inicio');
+      let promises = selectedImages.map((item, i) => {
+        return uploadImage(item['uri'], id)
       });
+
+      Promise.all(promises)
+        .then(results => {
+          console.log('results ', results)
+          const docRef = doc(db, 'posts', id);
+          const data = {
+            selectedImages: results,
+          }
+          updateDoc(docRef, data);
+
+          cleanForm();
+          setLoading(false);
+          navigation.navigate('Inicio');
+        });
+    }
   }
 
   const cleanForm = () => {

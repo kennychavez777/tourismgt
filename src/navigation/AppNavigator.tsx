@@ -48,7 +48,7 @@ function BottomTabGroup() {
 						myIcon = faHome;
 					} else if (route.name === 'Buscar') {
 						myIcon = faMagnifyingGlass;
-					} else if ( route.name === 'Crear Post') {
+					} else if ( route.name === 'Publicar') {
 						myIcon = faPlus
 					} else if ( route.name === 'Eventos') {
 						myIcon = faCalendarDays;
@@ -77,7 +77,7 @@ function BottomTabGroup() {
 				name="Buscar" component={SearchScreen}
 			/>
 			<Tab.Screen 
-				name="Crear Post" component={CreatePostScreen} 
+				name="Publicar" component={CreatePostScreen} 
 			/>
 			<Tab.Screen 
 				name="Eventos" component={AgendaScreen} 
@@ -132,7 +132,7 @@ function StackGroup() {
 								headerShown: false,
 							}}
 						/>
-						<Stack.Screen name="Crear Post" component={CreatePostScreen} />
+						<Stack.Screen name="Publicar" component={CreatePostScreen} />
 						<Stack.Screen name="Eventos" component={AgendaScreen} />
 						<Stack.Screen name="Perfil de" component={ProfileScreen} />
 						<Stack.Screen name="Detalle de Post" component={PostDetailScreen} />
