@@ -41,7 +41,7 @@ const AgendaScreen = () => {
 
   useEffect(() => {
     if (isFocused) {
-      loadItems({"dateString": "2023-10-15", "day": 15, "month": 10, "timestamp": 1698472889395, "year": 2023});
+      loadItems({"dateString": "2023-11-01", "day": 1, "month": 11, "timestamp": 1698472889395, "year": 2023});
     }
   }, [isFocused])
 

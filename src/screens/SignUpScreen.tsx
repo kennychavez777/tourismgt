@@ -148,7 +148,7 @@ function SignUpScreen() {
 				onChangeText={(text: string) => setPassword(text)}
 			/>
 			<TextInput
-				placeholder="Contraseña"
+				placeholder="Verificar contraseña"
 				placeholderTextColor="#999999"
 				value={confirmPassword}
 				secureTextEntry={true}

@@ -32,6 +32,12 @@ const EditButton = styled.TouchableOpacity`
   border-radius: 5px;
 `;
 
+const ButtonText = styled.Text`
+  color: black; /* Color del texto del botón */
+  font-size: 25px;
+  font-weight: bold;
+`;
+
 // Tabs
 const Tab = createBottomTabNavigator();
 
@@ -64,7 +70,7 @@ function BottomTabGroup() {
 				name="Inicio"
 				component={Dashboard} 
 				options={({ navigation, route }) => ({
-					// headerTitle: (props) => <Text>hello</Text>,
+					headerTitle: (props) => <ButtonText>TuriGT</ButtonText>,
 					// Add a placeholder button without the `onPress` to avoid flicker
 					headerRight: () => (
 						<EditButton onPress={() => logout()}>
@@ -96,9 +102,6 @@ const Stack = createNativeStackNavigator();
 function StackGroup() {
 	// Session
 	const { session } = useSession();
-	console.log('====================================');
-	console.log(session);
-	console.log('====================================');
 	return (
 		<Stack.Navigator
 		>
