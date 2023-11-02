@@ -48,8 +48,6 @@ function ImagePickerButton({ selectedImages, setSelectedImages }) {
     const options = {
       mediaType: 'photo',
       allowsEditing: true,
-      maxWidth: 800,
-      maxHeight: 800,
       multiple: true, // Permite seleccionar múltiples fotos
     };
 
