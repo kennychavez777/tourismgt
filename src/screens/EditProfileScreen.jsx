@@ -148,11 +148,14 @@ function EditProfileScreen({ route, navigation }) {
     setLoading(true);
     const user = auth.currentUser;
     if (password === verifyPassword) {
-      if (password) {
+      if (password.length > 5) {
         updatePassword(user, password);
 
         setPassword('');
         setVerifyPassword('');
+        showToast('Perfil actualizado.')
+      } else {
+        showError('Error', messages['auth/weak-password'])
       }
       
       if (userName) {
@@ -162,6 +165,7 @@ function EditProfileScreen({ route, navigation }) {
         updateDoc(userRef, {
           userName: userName
         })
+        showToast('Perfil actualizado.')
       } else {
         showError('El nombre de usuario no puede ir vacío.')
       }
@@ -169,7 +173,6 @@ function EditProfileScreen({ route, navigation }) {
       showError('Error', 'Las contraseñas no son iguales.');
     }
     setLoading(false);
-    showToast('Perfil actualizado.')
   }
 
   return (
