@@ -4,12 +4,11 @@ import styled from 'styled-components';
 import Avatar from '../components/ProfilePic';
 import ImageCarousel from '../components/GalleryPost';
 import ActionsButtons from '../components/ActionsButtons';
-import { FIRESTORE as db, STORAGE as st } from '../firebase/config';
+import { FIRESTORE as db } from '../firebase/config';
 import { collection, query, orderBy, getDocs } from 'firebase/firestore';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { useSession } from '../hooks/useSession';
-import { DEFAULT_PROFILE_PIC } from '../utils/utilities';
-import { getDownloadURL, listAll, ref } from 'firebase/storage';
+import { DEFAULT_PROFILE_PIC, getPostedTime } from '../utils/utilities';
 
 const Container = styled.ScrollView`
 	flex: 1;
@@ -59,6 +58,15 @@ const PostTitle = styled.Text`
   marginLeft: 10px;
 `;
 
+const OpenDetailContainer = styled.TouchableOpacity`
+`;
+
+const DateText = styled.Text`
+  fontSize: 10px;
+  color: grey;
+  fontWeight: bold;
+  marginLeft: 10px;
+`;
 
 function Dashboard () {
   const [ posts, setPosts ] = useState([]);
@@ -121,8 +129,11 @@ function Dashboard () {
               <GalleryContainer>
                 <ImageCarousel images={item.selectedImages} />
               </GalleryContainer>
-              <PostTitle>{item.title}</PostTitle>
+              <OpenDetailContainer onPress={() => navigation.navigate('Detalle', item)}>
+                <PostTitle>{item.title}</PostTitle>
+              </OpenDetailContainer>
               <ActionsButtons likes={item.likes} comments={item.comments} data={item} />
+              <DateText>{getPostedTime(item.createdAt)}</DateText>
             </Post>
           ))
       }

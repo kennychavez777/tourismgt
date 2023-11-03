@@ -141,7 +141,7 @@ function ProfileScreen ({ route, navigation }) {
           posts.length > 0 ? 
             posts
               .map((item, index) => (
-                <PostContainer onPress={() => nav.navigate('Detalle de Post', item)} key={index}>
+                <PostContainer onPress={() => nav.navigate('Detalle', item)} key={index}>
                   <ImagePost source={{ uri: item.selectedImages[0] }}></ImagePost>
                   <TitlePost>{ item.title }</TitlePost>
                   <PlaceTitlePost>{ item.location }</PlaceTitlePost>

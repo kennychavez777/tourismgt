@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { useSession } from '../hooks/useSession.jsx';
@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { useSearch } from '../hooks/useSearch.jsx';
 import { useNavigation } from '@react-navigation/native';
+import { RefreshControl } from 'react-native';
 
 const Container = styled.ScrollView`
   flex: 1;
@@ -96,10 +97,19 @@ function SearchScreen () {
 	const [ search, setSearch ] = useState('');
 	const [ fullData, setFullData ] = useState([]);
 	const [ posts, setPosts ] = useState([]);
+	const [refreshing, setRefreshing] = React.useState(false);
 	
 	useEffect(() => {
 		getAll();
-	}, [])
+	}, []);
+
+	const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      getAll();
+      setRefreshing(false);
+    }, 100);
+  }, []);
 
 	const getAll = async () => {
 		const all = await getAllPosts();
@@ -130,7 +140,11 @@ function SearchScreen () {
 	}
 
 	return (
-			<Container>
+			<Container
+				refreshControl={
+					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+				}
+			>
 				<ConfigContainer>
 					<SearchInput
 						placeholder="¡Busca los mejores lugares!"
@@ -148,7 +162,7 @@ function SearchScreen () {
 					{
 						posts
 						.map((item, index) => (
-							<ResultItem key={index} onPress={() => navigation.navigate('Detalle de Post', item)}>
+							<ResultItem key={index} onPress={() => navigation.navigate('Detalle', item)}>
 								<Picture source={{ uri: item.selectedImages[0] }} />
 								<PlaceDataContainer>
 									<PlaceTitle>{item.title}</PlaceTitle>

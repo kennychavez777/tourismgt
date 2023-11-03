@@ -138,7 +138,7 @@ function StackGroup() {
 						<Stack.Screen name="Publicar" component={CreatePostScreen} />
 						<Stack.Screen name="Eventos" component={AgendaScreen} />
 						<Stack.Screen name="Perfil de" component={ProfileScreen} />
-						<Stack.Screen name="Detalle de Post" component={PostDetailScreen} />
+						<Stack.Screen name="Detalle" component={PostDetailScreen} />
 						<Stack.Screen name="Editar Perfil" component={EditProfileScreen} />
 						<Stack.Screen name="Crear Evento" component={CreateEventsScreen} />
 					</Stack.Group>

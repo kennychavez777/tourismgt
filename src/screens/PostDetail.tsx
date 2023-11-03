@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import ImageCarousel from '../components/GalleryPost';
 import PostedBy from '../components/PostedBy';
 import Comments from '../components/Comments';
+import { useSession } from '../hooks/useSession';
+import { deleteDoc, doc } from 'firebase/firestore';
+import { FIRESTORE as db } from '../firebase/config';
 
 const Container = styled.ScrollView`
   flex: 1;
@@ -41,10 +44,32 @@ const PostDescription = styled.Text`
   marginBottom: 10px
 `;
 
+const DeleteButton = styled.TouchableOpacity`
+  background-color: red;
+  width: 100%;
+  borderRadius: 5px;
+  padding: 10px;
+`;
 
+const DeleteButtonText = styled.Text`
+  color: white;
+  fontSize: 14px;
+  fontWeight: bold;
+  textAlign: center;
+`;
 
 function PostDetailScreen ({ route, navigation }) {
   const detail = route.params;
+  const { session } = useSession();
+
+  const deletePost = async(postId: string) => {
+    try {
+      await deleteDoc(doc(db, 'posts', postId));
+      navigation.goBack();
+    } catch (error) {
+      console.log('\n\nerror: ', error);
+    }
+  }
 
   return (
     <Container>
@@ -57,6 +82,14 @@ function PostDetailScreen ({ route, navigation }) {
           {detail.description}
         </PostDescription>
         <PostedBy by={detail.postedBy} />
+        {
+          detail.postedBy.email === session.email ?
+            <DeleteButton onPress={() => deletePost(detail.id)}>
+              <DeleteButtonText>Eliminar publicación</DeleteButtonText>
+            </DeleteButton>
+          :
+            null
+        }
       </DetailContainer>
       <Comments postId={detail.id} />
     </Container>

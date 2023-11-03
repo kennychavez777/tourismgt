@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Alert, Text, TouchableOpacity, StyleSheet, View } from 'react-native';
 import { Agenda } from '@bas-software/react-native-calendars';
 import testIDs from '../utils/testIDs';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
@@ -8,13 +8,17 @@ import { FIRESTORE as db } from '../firebase/config';
 
 // Icons
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faCalendarPlus } from '@fortawesome/free-solid-svg-icons';
-import { collection, getDocs, or, query, where } from 'firebase/firestore';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { collection, deleteDoc, doc, getDocs, or, query, where } from 'firebase/firestore';
 import { useSession } from '../hooks/useSession';
 
 import styled from 'styled-components';
 
 const AgendaScreen = () => {
+  const Container = styled.View`
+    width: 85%;
+  `;
+
   const TitleText = styled.Text`
     fontSize: 17px;
     fontWeight: bold;
@@ -32,6 +36,15 @@ const AgendaScreen = () => {
     color: black;
   `;
 
+  const DeleteContainer = styled.TouchableOpacity`
+    width: 15%;
+    height: 100%;
+    background-color: red;
+    justifyContent: center;
+    alignItems: center;
+    borderRadius: 5px;
+  `;
+
   const [items, setItems] = useState({});
   const current = new Date();
 
@@ -40,8 +53,8 @@ const AgendaScreen = () => {
   const { session } = useSession();
 
   useEffect(() => {
-    if (isFocused) {
-      loadItems({"dateString": "2023-11-01", "day": 1, "month": 11, "timestamp": 1698472889395, "year": 2023});
+    if(isFocused) {
+      loadItems(generateDate());
     }
   }, [isFocused])
 
@@ -104,7 +117,8 @@ const AgendaScreen = () => {
               name: item.title,
               time: item.time,
               description: item.description,
-              location: item.location
+              location: item.location,
+              id: item.id
             })
           });
         }
@@ -123,18 +137,34 @@ const AgendaScreen = () => {
     return date.toISOString().split('T')[0];
   };
 
+  const deleleteEvent =  async(item) => {
+    try {
+      console.log('\n\neliminando ', item.id)
+      let eventId = item.id;
+      await deleteDoc(doc(db, 'events', eventId));
+      console.log('\n\n\nitem eliminado', item);
+      loadItems(generateDate());
+    } catch (error) {
+      console.log('\n\nerror: ', error);
+    }
+  }
+
   const renderItem = ( item, isFirst ) => {
     return (
-      <TouchableOpacity
-        testID={testIDs.agenda.ITEM}
-        style={[styles.item, { height: 'auto' }]}
-        // onPress={() => navigation.navigate('CreateEvent')}
+      <View
+        
+        style={[styles.item, { height: 'auto', flexDirection: 'row' }]}
       >
-        <TitleText>{item.name}</TitleText>
-        <ValueText><BoldText>Lugar: </BoldText> {item.location}</ValueText>
-        <ValueText><BoldText>Hora: </BoldText> {item.time}</ValueText>
-        <ValueText><BoldText>Descripción: </BoldText> {item.description}</ValueText>
-      </TouchableOpacity>
+        <Container>
+          <TitleText>{item.name}</TitleText>
+          <ValueText><BoldText>Lugar: </BoldText> {item.location}</ValueText>
+          <ValueText><BoldText>Hora: </BoldText> {item.time}</ValueText>
+          <ValueText><BoldText>Descripción: </BoldText> {item.description}</ValueText>
+        </Container>
+        <DeleteContainer onPress={() => deleleteEvent(item)}>
+          <FontAwesomeIcon icon={faTrash} color='white' size={24} />
+        </DeleteContainer>
+      </View>
     );
   };
 

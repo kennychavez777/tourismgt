@@ -147,32 +147,51 @@ function EditProfileScreen({ route, navigation }) {
   const saveProfile = () => {
     setLoading(true);
     const user = auth.currentUser;
-    if (password === verifyPassword) {
-      if (password.length > 5) {
-        updatePassword(user, password);
 
-        setPassword('');
-        setVerifyPassword('');
-        showToast('Perfil actualizado.')
-      } else {
-        showError('Error', messages['auth/weak-password'])
+    if (password.length > 0 && verifyPassword.length > 0) {
+      if (password !== verifyPassword) {
+        showError('Error', 'Las contraseñas no son iguales.');
+        setLoading(false);
+        return
       }
-      
-      if (userName) {
+
+      if (password.length < 6) {
+        showError('Error', messages['auth/weak-password'])
+        setLoading(false);
+        return
+      } 
+    }
+
+    if (userName.length < 3) {
+      showError('Error','El nombre de usuario debe tener al menos 3 caracteres.')
+      setLoading(false);
+      return
+    }
+
+    try{
+      if (password.length > 0 && verifyPassword.length > 0) {
+        updatePassword(user, password);
+        setPassword('');
+        setVerifyPassword(''); 
+        showToast('Perfil actualizado.');
+      }
+
+      if (userName !== session.userName ) {
         const userId = session.id;
         const userRef = doc(db, 'users', userId);
-
         updateDoc(userRef, {
           userName: userName
         })
         showToast('Perfil actualizado.')
-      } else {
-        showError('El nombre de usuario no puede ir vacío.')
       }
-    } else {
-      showError('Error', 'Las contraseñas no son iguales.');
+      
+    }catch(e){
+      console.error(e)
+      showError('Error','Ha ocurrido un error al actualizar el perfil, por favor intente más tarde.');
+    }finally{
+      setLoading(false);
+      navigation.navigate('Perfil de');
     }
-    setLoading(false);
   }
 
   return (

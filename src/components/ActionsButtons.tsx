@@ -78,7 +78,7 @@ function ActionsButtons ({likes, comments, data}) {
         }
         <ActionItemContainer>{allLikes.length}</ActionItemContainer>
       </IndividualContainer>
-      <IndividualContainer onPress={() => navigation.navigate('Detalle de Post', data)}>
+      <IndividualContainer onPress={() => navigation.navigate('Detalle', data)}>
         <FontAwesomeIcon icon={faComment} size={25} color='grey'  />
         <ActionItemContainer>{total_comments}</ActionItemContainer>
       </IndividualContainer>

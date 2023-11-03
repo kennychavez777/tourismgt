@@ -4,6 +4,7 @@ import styled from 'styled-components';
 // icons
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const Container = styled.View`
   width: 100%;
@@ -18,7 +19,7 @@ const Picture = styled.Image`
   borderRadius: 55px;
 `;
 
-const UsernameContainer = styled.View`
+const UsernameContainer = styled.TouchableOpacity`
   width: 100%;
   marginLeft: 10px;
   flex-direction: row;
@@ -53,12 +54,14 @@ const LikeContainer = styled.View`
 `;
 
 const PostedBy = ({by}) => {
+  const navigation = useNavigation();
+  console.log('by ', by);
   return (
     <Container>
       <Picture
         source={{ uri: by.profile_pic }}
       />
-      <UsernameContainer>
+      <UsernameContainer onPress={() => navigation.navigate('Perfil de', { userId: by.id })}>
         <DataContainer>
           <PostedByLabel>Publicado por</PostedByLabel>
           <UserNameLabel>@{by.userName}</UserNameLabel>

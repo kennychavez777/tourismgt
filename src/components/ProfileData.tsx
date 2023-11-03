@@ -140,7 +140,7 @@ function ProfileData({ user, totalLikes, totalPosts, isMyProfile}) {
   
   return (
     <Container>
-      <Picture source={{ uri: user.profile_pic }} />
+      <Picture source={{ uri: user.profile_pic ? user.profile_pic : 'https://firebasestorage.googleapis.com/v0/b/tourism-gt.appspot.com/o/default%2Fuser-icon.jpg?alt=media&token=230702d9-c172-49ba-a410-037fdd019c7e&_gl=1*wn4unb*_ga*MTY5NzE4OTkyLjE2OTcwMDEyMTg.*_ga_CW55HF8NVT*MTY5OTAyMTIxMS44Mi4xLjE2OTkwMjI4MTYuNDAuMC4w' }} />
       <UserInfoContainer>
         <NameText>@{user.userName}</NameText>
         {/* <UserNameText>@melirodriguez</UserNameText> */}

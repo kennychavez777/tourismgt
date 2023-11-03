@@ -8,6 +8,7 @@ import { getPostedTime, getCurrentDateAndTime } from '../utils/utilities';
 
 import { showError } from '../utils/errors';
 import { ActivityIndicator } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const Container = styled.View`
   width: 90%;
@@ -35,7 +36,7 @@ const Picture = styled.Image`
   borderRadius: 20px;
 `;
 
-const ContentContainer = styled.View`
+const ContentContainer = styled.TouchableOpacity`
   width: 90%;
   flex-direction: row;
   marginLeft: 10px;
@@ -95,6 +96,8 @@ const Comments = ({ postId }) => {
   const { session, getFullUser } = useSession();
   const [ loading, setLoading ] = useState(false);
 
+  const navigation = useNavigation();
+
   useEffect(() => {
     getAllComments();
   }, [])
@@ -108,14 +111,15 @@ const Comments = ({ postId }) => {
       const c = snapshot.data().comments;
       c.forEach(async (item) => {
         const user = await getFullUser(item.email);
-
+        
         setComments(prev => ([
           ...prev, {
             content: item.content,
             userName: user.userName,
             profile_pic: user.profile_pic,
             createdAt: item.createdAt,
-            email: user.email
+            email: user.email,
+            userId: user.id
           }
         ]))
       })
@@ -153,7 +157,8 @@ const Comments = ({ postId }) => {
           userName: session.userName,
           profile_pic: session.profile_pic,
           createdAt: getCurrentDateAndTime(),
-          email: session.email
+          email: session.email,
+          userId: session.id
         })
       ]);
       
@@ -174,7 +179,7 @@ const Comments = ({ postId }) => {
               <Picture
                 source={{ uri: item.profile_pic }}
               />
-              <ContentContainer>
+              <ContentContainer onPress={() => navigation.navigate('Perfil de', { userId: item.userId })}>
                 <NameLabel>{item.userName}</NameLabel>
                 <CreatedAtLabel>{getPostedTime(item.createdAt)}</CreatedAtLabel>
                 <CommentText>{item.content}</CommentText>
