@@ -54,6 +54,7 @@ const AgendaScreen = () => {
 
   useEffect(() => {
     if(isFocused) {
+      console.log('items ', items);
       loadItems(generateDate());
     }
   }, [isFocused])
